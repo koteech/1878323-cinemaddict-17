@@ -14,21 +14,21 @@ const createElement = (template) => {
 
 const render = (component, container, place = RenderPosition.BEFOREEND) => {
   const element = component.getElement();
-
-  switch (place) {
-    case RenderPosition.BEFOREBEGIN:
-      container.before(element);
-      break;
-    case RenderPosition.AFTERBEGIN:
-      container.prepend(element);
-      break;
-    case RenderPosition.BEFOREEND:
-      container.append(element);
-      break;
-    case RenderPosition.AFTEREND:
-      container.after(element);
-      break;
-  }
+  container.insertAdjacentElement(place, element);
+  // switch (place) {
+  //   case RenderPosition.BEFOREBEGIN:
+  //     container.before(element);
+  //     break;
+  //   case RenderPosition.AFTERBEGIN:
+  //     container.prepend(element);
+  //     break;
+  //   case RenderPosition.BEFOREEND:
+  //     container.append(element);
+  //     break;
+  //   case RenderPosition.AFTEREND:
+  //     container.after(element);
+  //     break;
+  // }
 };
 
 export {RenderPosition, createElement, render};
