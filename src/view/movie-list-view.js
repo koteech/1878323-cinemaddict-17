@@ -22,7 +22,7 @@ export default class MovieListView {
   updateElement() {
     const element = createElement(this.getTemplate());
     const container = element.querySelector('.films-list__container');
-    Array.from({length: this.count}).map(() => {render(new MovieCardView(),container);});
+    Array.from({length: this.count},() => {render(new MovieCardView(),container);});
     if (!this.isExtra) {render(new MovieShowMoreButtonView, element);}
     return element;
   }
