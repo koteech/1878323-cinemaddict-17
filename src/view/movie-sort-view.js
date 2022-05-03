@@ -1,6 +1,6 @@
-import {createElement} from '../render.js';
+import {createElement} from '../render';
 
-const createSortTemplate = () => `
+const createBoardTemplate = () => `
 <ul class="sort">
     <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
     <li><a href="#" class="sort__button">Sort by date</a></li>
@@ -8,15 +8,16 @@ const createSortTemplate = () => `
 </ul>
 `;
 
-export default class MovieSortView {
+export default class SortView {
   getTemplate() {
-    return createSortTemplate();
+    return createBoardTemplate();
   }
 
   getElement() {
     if (!this.element) {
       this.element = createElement(this.getTemplate());
     }
+
     return this.element;
   }
 
@@ -24,4 +25,3 @@ export default class MovieSortView {
     this.element = null;
   }
 }
-
