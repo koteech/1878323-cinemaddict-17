@@ -32,6 +32,7 @@ export default class FilmSectionView {
 
     return this.element;
   }
+
   removeElement() {
     this.element = null;
   }
