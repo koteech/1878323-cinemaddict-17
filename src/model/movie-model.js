@@ -1,5 +1,5 @@
-import {generateMovies} from '../mock/movie.js';
-import {generateComments} from '../mock/comments.js';
+import {generateMovies} from '../mock/movie';
+import {generateComments} from '../mock/comments';
 
 const MOVIES_COUNT = 40;
 const TOTAL_COMMENTS_COUNT = 40;

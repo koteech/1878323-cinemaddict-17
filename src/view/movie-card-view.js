@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import {createElement} from '../render';
 import dayjs from 'dayjs';
 
 const createBoardTemplate = (movie) => `
@@ -21,7 +21,8 @@ const createBoardTemplate = (movie) => `
 		<button class="film-card__controls-item film-card__controls-item--mark-as-watched ${movie.userDetails.alreadyWatched ? 'film-card__controls-item--active' : null}" type="button">Mark as watched</button>
 		<button class="film-card__controls-item film-card__controls-item--favorite ${movie.userDetails.favorite ? 'film-card__controls-item--active' : null}" type="button">Mark as favorite</button>
 	</div>
-</article>`;
+</article>
+`;
 
 export default class MovieCardView {
   constructor(movie) {

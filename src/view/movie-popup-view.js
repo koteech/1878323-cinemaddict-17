@@ -1,5 +1,5 @@
-import {createElement} from '../render.js';
-import {getHumanDate} from '../utils.js';
+import {createElement} from '../render';
+import {getHumanDate} from '../utils';
 
 const createMovieDetailsTemplate = (movieInfo, movieCommentsIds, userDetails) => `
 <section class="film-details">
@@ -87,7 +87,8 @@ const createMovieDetailsTemplate = (movieInfo, movieCommentsIds, userDetails) =>
 			</section>
 		</div>
 	</form>
-</section>`;
+</section>
+`;
 
 
 export default class MovieDetailsView {

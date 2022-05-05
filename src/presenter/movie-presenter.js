@@ -1,7 +1,7 @@
 import MovieFilterView from '../view/movie-filter-view';
 import MovieSortView from '../view/movie-sort-view';
 import MovieContainerView from '../view/movie-container-view';
-import MovieCardView from '../view/movie-card-view.js';
+import MovieCardView from '../view/movie-card-view';
 import {render} from '../render';
 
 const ALL_MOVIES_LENGTH = 5;

@@ -1,6 +1,6 @@
-import MovieDetailsView from '../view/movie-popup-view.js';
-import MovieDetailsCommentView from '../view/movie-popup-comment-view.js';
-import {render} from '../render.js';
+import MovieDetailsView from '../view/movie-popup-view';
+import MovieDetailsCommentView from '../view/movie-popup-comment-view';
+import {render} from '../render';
 
 const getMovieComments = (movie, allComments) => allComments.filter((comment) => movie.comments.includes(comment.id));
 

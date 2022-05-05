@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import {createElement} from '../render';
 
 const profileMap = {
   novice: [1, 10],

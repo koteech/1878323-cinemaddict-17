@@ -1,4 +1,4 @@
-import {createDataIds, generateDate, getRandomArrayElement, getRandomInteger, getTimeFromMins} from '../utils.js';
+import {createDataIds, generateDate, getRandomArrayElement, getRandomInteger, getTimeFromMins} from '../utils';
 
 const TITLE = [
   'The Dance of Life',

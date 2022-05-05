@@ -4,7 +4,6 @@ import MovieModel from './model/movie-model';
 import MoviePresenter from './presenter/movie-presenter';
 import FooterStatisticsView from './view/footer-statistics-view';
 import MovieDetailsPresenter from './presenter/movie-details-presenter';
-import {getRandomArrayElement, getRandomInteger} from "./utils";
 
 const siteMainElement = document.querySelector('.main');
 const siteHeaderElement = document.querySelector('.header');
