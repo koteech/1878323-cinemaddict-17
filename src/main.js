@@ -17,10 +17,6 @@ const dataModel = new MovieModel();
 const comments = dataModel.getComments();
 const movies = dataModel.getMovies();
 
-
-console.log(Array.from(new Set(Array.from({length: getRandomInteger(0, 6)}, () => getRandomArrayElement(comments.map((comment) => comment.id))))))
-
-
 render(new ProfileView(movies), siteHeaderElement);
 render(new FooterStatisticsView(movies), siteFooterStatisticsElement);
 
