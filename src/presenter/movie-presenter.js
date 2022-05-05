@@ -28,7 +28,7 @@ export default class MoviePresenter {
     if (movies.length > 0) {
       allMoviesListEmptyElement.classList.add('visually-hidden');
       allMoviesListButtonShowMore.classList.remove('visually-hidden');
-      movies.slice(0, ALL_MOVIES_LENGTH).map((movie) => render(new MovieCardView(movie), allMoviesListContainerElement));
+      movies.slice(0, ALL_MOVIES_LENGTH).forEach((movie) => render(new MovieCardView(movie), allMoviesListContainerElement));
       movies.sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating).slice(0, TOP_RATED_LENGTH).map((movie) => render(new MovieCardView(movie), topRatedListContainerElement));
       movies.sort((a, b) => b.comments.length - a.comments.length).slice(0, MOST_COMMENTED_LENGTH).map((movie) => render(new MovieCardView(movie), mostCommentedListContainerElement));
     }

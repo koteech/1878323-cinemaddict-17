@@ -30,7 +30,6 @@
     "node": "16"
   },
   "dependencies": {
-    "webpack": "^5.72.0",
     "dayjs": "1.11.1",
     "flatpickr": "4.6.13",
     "he": "1.2.0"

@@ -61,7 +61,7 @@ const ACTORS = [
 
 const generateMovie = (id, comments) => ({
   id: id,
-  comments: Array.from({length: getRandomInteger(0, 6)}, () => getRandomArrayElement(comments.map((comment) => comment.id))),
+  comments: Array.from(new Set(Array.from({length: getRandomInteger(0, 6)}, () => getRandomArrayElement(comments.map((comment) => comment.id))))),
   filmInfo: {
     title: getRandomArrayElement(TITLE),
     alternativeTitle: getRandomArrayElement(TITLE),
