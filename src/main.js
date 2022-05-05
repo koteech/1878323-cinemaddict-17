@@ -1,20 +1,23 @@
-import Presenter from './presenter/presenter';
-import ProfileView from './view/header-profile-view';
-import FooterStatisticsView from './view/footer-statistics-view';
-// import FilmDetailsView from './view/movie-popup-view';
 import {render} from './render';
+import ProfileView from './view/header-profile-view';
+import MovieModel from './model/movie-model';
+import MoviePresenter from './presenter/movie-presenter';
+import FooterStatisticsView from './view/footer-statistics-view';
+import MovieDetailsPresenter from './presenter/movie-details-presenter';
 
-// const siteBody = document.querySelector('body');
 const siteMainElement = document.querySelector('.main');
 const siteHeaderElement = document.querySelector('.header');
 const siteFooterStatisticsElement = document.querySelector('.footer__statistics');
 
-const presenter = new Presenter();
+const moviePresenter = new MoviePresenter();
+const movieDetailsPresenter = new MovieDetailsPresenter();
 
-// render(new FilmDetailsView, siteBody);
-// siteBody.classList.add('hide-overflow');
+const dataModel = new MovieModel();
+const comments = dataModel.getComments();
+const movies = dataModel.getMovies();
 
-render(new ProfileView(), siteHeaderElement);
-render(new FooterStatisticsView(), siteFooterStatisticsElement);
+render(new ProfileView(movies), siteHeaderElement);
+render(new FooterStatisticsView(movies), siteFooterStatisticsElement);
 
-presenter.init(siteMainElement);
+moviePresenter.init(siteMainElement, movies);
+movieDetailsPresenter.init(document.body, movies, comments);
