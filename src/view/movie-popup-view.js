@@ -51,7 +51,7 @@ const createMovieDetailsTemplate = (movieInfo, movieCommentsIds, userDetails) =>
 							</tr>
 							<tr class="film-details__row">
 								<td class="film-details__term">Genres</td>
-							  <td class="film-details__cell">${movieInfo.genre.reduce((total, item) => `${total} <span class="film-details__genre">${item}</span>` , '')} </td>
+							  <td class="film-details__cell">${movieInfo.genre.reduce((total, item) => `${total} <span class="film-details__genre">${item}</span>`, '')} </td>
 							</tr>
 						</tbody>
 					</table>
