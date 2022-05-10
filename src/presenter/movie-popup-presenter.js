@@ -38,7 +38,7 @@ export default class MoviePopupPresenter {
       document.body.classList.remove('hide-overflow');
     }
 
-    const onCardClick = () => {
+    const movieCardClickHandler = () => {
       document.body.classList.add('hide-overflow');
       this.#moviePopupComponent = new MoviePopupView(this.#movies);
       render(this.#moviePopupComponent, document.body);
@@ -47,6 +47,6 @@ export default class MoviePopupPresenter {
       this.#moviePopupComponent.element.querySelector('.film-details__close-btn').addEventListener('click', moviePopupCloseButtonClickHandler);
     };
 
-    this.#movieCardComponent.element.querySelector('.film-card__link').addEventListener('click', onCardClick);
+    this.#movieCardComponent.element.querySelector('.film-card__link').addEventListener('click', movieCardClickHandler);
   }
 }
