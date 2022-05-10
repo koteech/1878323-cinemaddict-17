@@ -1,7 +1,7 @@
 import {createElement} from '../render';
 import {getDateForComment} from '../utils';
 
-const createMovieDetailsCommentTemplate = (comment) => `
+const createMoviePopupCommentTemplate = (comment) => `
 <li class="film-details__comment">
     <span class="film-details__comment-emoji">
         <img src="./images/emoji/${comment.emotion}.png" width="55" height="55" alt="emoji-${comment.emotion}">
@@ -24,7 +24,7 @@ export default class MoviePopupCommentView {
   }
 
   get template() {
-    return createMovieDetailsCommentTemplate(this.#comment);
+    return createMoviePopupCommentTemplate(this.#comment);
   }
 
   get element() {

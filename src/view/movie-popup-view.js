@@ -1,7 +1,7 @@
 import {createElement} from '../render';
 import {getHumanDate} from '../utils';
 
-const createMovieDetailsTemplate = (movieInfo, movieCommentsIds, userDetails) => `
+const createMoviePopupTemplate = (movieInfo, movieCommentsIds, userDetails) => `
 <section class="film-details">
 	<form class="film-details__inner" action="" method="get">
 		<div class="film-details__top-container">
@@ -104,7 +104,7 @@ export default class MoviePopupView {
   }
 
   get template() {
-    return createMovieDetailsTemplate(this.#movieInfo, this.#movieCommentsIds, this.#userDetails);
+    return createMoviePopupTemplate(this.#movieInfo, this.#movieCommentsIds, this.#userDetails);
   }
 
   get element() {

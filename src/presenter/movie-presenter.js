@@ -2,7 +2,7 @@ import {render} from '../render';
 import FooterStatisticsView from '../view/footer-statistics-view';
 import MovieCardView from '../view/movie-card-view';
 import MovieContainerView from '../view/movie-container-view';
-import MovieDetailsPresenter from './movie-details-presenter';
+import MoviePopupPresenter from './movie-popup-presenter';
 import MovieFilterView from '../view/movie-filter-view';
 import MovieListView from '../view/movie-list-view';
 import MovieNoDataView from '../view/movie-no-data-view';
@@ -88,8 +88,8 @@ export default class MoviePresenter {
     const movieCardComponent = new MovieCardView(movie);
     render(movieCardComponent, movieContainer);
 
-    const movieDetailsPresenter = new MovieDetailsPresenter(movieCardComponent, movie, this.#comments);
-    movieDetailsPresenter.init();
+    const moviePopupPresenter = new MoviePopupPresenter(movieCardComponent, movie, this.#comments);
+    moviePopupPresenter.init();
   }
 
   #showMoreButtonClickHandler = (evt) => {
