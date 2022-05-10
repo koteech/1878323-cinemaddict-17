@@ -5,22 +5,26 @@ import {render} from '../render';
 const getMovieComments = (movie, allComments) => allComments.filter((comment) => movie.comments.includes(comment.id));
 
 export default class MovieDetailsPresenter {
+  #bodyElement = null;
+  #movies = null;
+  #comments = null;
+  #movieDetailsComponent = null;
 
-  init = (movieContainer, movies, comments) => {
-    const onMovieCardClick = (evt) => {
-      const elementId = parseInt(evt.target.closest('.film-card').id, 10);
-      const selectedMovie = movies.filter((movie) => movie.id === elementId)[0];
-      const selectedMovieComments = getMovieComments(selectedMovie, comments);
+  constructor(bodyElement, movies, comments) {
+    this.#bodyElement = bodyElement;
+    this.#movies = [...movies];
+    this.#comments = [...comments];
+  }
 
-      render(new MovieDetailsView(selectedMovie), movieContainer);
-      const movieDetainsCommentContainer = document.querySelector('.film-details__comments-list');
-      selectedMovieComments.forEach((comment) => render(new MovieDetailsCommentView(comment), movieDetainsCommentContainer));
-
-      document.querySelector('.film-details__close-btn').addEventListener('click', () => document.querySelector('.film-details').remove());
-    };
-
-    if (movies.length > 0) {
-      document.querySelectorAll('.film-card__link').forEach((element) => element.addEventListener('click', onMovieCardClick));
-    }
+  init = () => {
+    this.#renderPage();
   };
+
+  #renderPage () {
+    document.querySelectorAll('.film-card__link').forEach((element) => this.#render(element));
+  }
+
+  #render (element) {
+
+  }
 }

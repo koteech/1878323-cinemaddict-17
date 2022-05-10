@@ -16,23 +16,26 @@ const createMovieDetailsCommentTemplate = (comment) => `
 `;
 
 export default class MovieDetailsCommentView {
+  #element = null;
+  #comment = null;
+
   constructor(comment) {
-    this.comment = comment;
+    this.#comment = comment;
   }
 
-  getTemplate() {
-    return createMovieDetailsCommentTemplate(this.comment);
+  get template() {
+    return createMovieDetailsCommentTemplate(this.#comment);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
