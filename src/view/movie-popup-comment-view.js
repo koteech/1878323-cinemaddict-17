@@ -15,7 +15,7 @@ const createMovieDetailsCommentTemplate = (comment) => `
 </li>
 `;
 
-export default class MovieDetailsCommentView {
+export default class MoviePopupCommentView {
   #element = null;
   #comment = null;
 

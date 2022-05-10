@@ -6,7 +6,7 @@ const createBoardTemplate = () => `<ul class="sort">
 <li><a href="#" class="sort__button">Sort by rating</a></li>
 </ul>`;
 
-export default class SortView {
+export default class MovieSortView {
   #element = null;
 
   get template() {

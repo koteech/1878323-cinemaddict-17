@@ -1,16 +1,15 @@
 import {render} from '../render';
-import MovieFilterView from '../view/movie-filter-view';
-import MovieSortView from '../view/movie-sort-view';
-import MovieSectionView from '../view/movie-section-view';
-import MovieNoDataView from '../view/movie-no-data-view';
-import ProfileView from '../view/header-profile-view';
 import FooterStatisticsView from '../view/footer-statistics-view';
-import MovieContainerView from '../view/movie-container-view';
-import MovieListView from '../view/movie-list-view';
-import ShowMoreButtonView from '../view/show-more-button-view';
 import MovieCardView from '../view/movie-card-view';
-
-import MovieDetailsPresenter from '../presenter/movie-details-presenter';
+import MovieContainerView from '../view/movie-container-view';
+import MovieDetailsPresenter from './movie-details-presenter';
+import MovieFilterView from '../view/movie-filter-view';
+import MovieListView from '../view/movie-list-view';
+import MovieNoDataView from '../view/movie-no-data-view';
+import MovieSectionView from '../view/movie-section-view';
+import MovieSortView from '../view/movie-sort-view';
+import ProfileView from '../view/header-profile-view';
+import ShowMoreButtonView from '../view/show-more-button-view';
 
 const ALL_MOVIE_COUNT_PER_STEP = 5;
 const TOP_RATED_MOVIE_COUNT_PER_STEP = 2;
@@ -22,7 +21,7 @@ const SectionTitle = {
   mostCommented: 'Most commented',
 };
 
-export default class MainPresenter {
+export default class MoviePresenter {
   #mainContainer = null;
   #profileElement = null;
   #footerStatisticsElement = null;
@@ -39,7 +38,7 @@ export default class MainPresenter {
   #topRatedMovieListContainerComponent = new MovieContainerView();
   #mostCommentedMovieListComponent = new MovieListView(SectionTitle.mostCommented, true);
   #mostCommentedMovieListContainerComponent = new MovieContainerView();
-  #loadMoreButtonComponent = new ShowMoreButtonView();
+  #showMoreButtonComponent = new ShowMoreButtonView();
 
   constructor(mainContainer, profileElement, footerStatisticsElement, movieModel) {
     this.#mainContainer = mainContainer;
@@ -52,7 +51,6 @@ export default class MainPresenter {
 
   init = () => {
     this.#renderPage();
-
   };
 
   #renderPage() {
@@ -79,27 +77,27 @@ export default class MainPresenter {
 
     this.#movies.slice(0, Math.min(this.#movies.length, ALL_MOVIE_COUNT_PER_STEP)).forEach((movie) => this.#renderMovie(movie, this.#allMovieListContainerComponent.element));
     if (this.#movies.length > ALL_MOVIE_COUNT_PER_STEP) {
-      render(this.#loadMoreButtonComponent, this.#allMovieListComponent.element);
-      this.#loadMoreButtonComponent.element.addEventListener('click', this.#handleLoadMoreButtonClick);
+      render(this.#showMoreButtonComponent, this.#allMovieListComponent.element);
+      this.#showMoreButtonComponent.element.addEventListener('click', this.#showMoreButtonClickHandler);
     }
     this.#movies.sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating).slice(0, Math.min(this.#movies.length, TOP_RATED_MOVIE_COUNT_PER_STEP)).forEach((movie) => this.#renderMovie(movie, this.#topRatedMovieListContainerComponent.element));
     this.#movies.sort((a, b) => b.comments.length - a.comments.length).slice(0, Math.min(this.#movies.length, MOST_COMMENTED_MOVIE_COUNT_PER_STEP)).forEach((movie) => this.#renderMovie(movie, this.#mostCommentedMovieListContainerComponent.element));
   }
 
-  #renderMovie(movie, MovieCountainerElement) {
+  #renderMovie(movie, movieContainer) {
     const movieCardComponent = new MovieCardView(movie);
-    render(movieCardComponent, MovieCountainerElement);
+    render(movieCardComponent, movieContainer);
 
     const movieDetailsPresenter = new MovieDetailsPresenter(movieCardComponent, movie, this.#comments);
     movieDetailsPresenter.init();
   }
 
-  #handleLoadMoreButtonClick = (evt) => {
+  #showMoreButtonClickHandler = (evt) => {
     evt.preventDefault();
     this.#movies.slice(this.#renderedAllMovieShowen, this.#renderedAllMovieShowen + ALL_MOVIE_COUNT_PER_STEP).forEach((movie) => this.#renderMovie(movie, this.#allMovieListContainerComponent.element));
     this.#renderedAllMovieShowen += ALL_MOVIE_COUNT_PER_STEP;
     if (this.#movies.length <= this.#renderedAllMovieShowen) {
-      this.#loadMoreButtonComponent.element.remove();
+      this.#showMoreButtonComponent.element.remove();
     }
   };
 }

@@ -15,7 +15,7 @@ const createProfileTemplate = (length) => `
 </section>
 `;
 
-export default class ProfileView {
+export default class HeaderProfileView {
   #movieWatchedCount = null;
   #element = null;
 

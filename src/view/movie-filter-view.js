@@ -23,7 +23,7 @@ const createFilterTemplate = (filters) => `<nav class="main-navigation">
 </nav>`;
 
 
-export default class FilterView {
+export default class MovieFilterView {
   #filters = [];
   #element = null;
 

@@ -1,6 +1,6 @@
-import MovieDetailsView from '../view/movie-popup-view';
-import MovieDetailsCommentView from '../view/movie-popup-comment-view';
 import {render} from '../render';
+import MovieDetailsCommentView from '../view/movie-popup-comment-view';
+import MovieDetailsView from '../view/movie-popup-view';
 
 export default class MovieDetailsPresenter {
   #movies = null;
@@ -16,17 +16,17 @@ export default class MovieDetailsPresenter {
   }
 
   init = () => {
-    this.#renderPage();
+    this.#renderMovieDetails();
   };
 
-  #renderPage() {
-    const onEscKeyDown = (evt) => {
+  #renderMovieDetails() {
+    const documentKeydownHandler = (evt) => {
       if (evt.key === 'Escape' || evt.key === 'Esc') {
         closeMovieDetails(evt, this.#movieDetailsComponent);
       }
     };
 
-    const handleCloseButtonClick = (evt) => {
+    const movieDetailsCloseButtonClickHandler = (evt) => {
       closeMovieDetails(evt, this.#movieDetailsComponent);
     };
 
@@ -34,7 +34,7 @@ export default class MovieDetailsPresenter {
       evt.preventDefault();
       component.element.remove();
       component.removeElement();
-      document.removeEventListener('keydown', onEscKeyDown);
+      document.removeEventListener('keydown', documentKeydownHandler);
       document.body.classList.remove('hide-overflow');
     }
 
@@ -43,8 +43,8 @@ export default class MovieDetailsPresenter {
       this.#movieDetailsComponent = new MovieDetailsView(this.#movies);
       render(this.#movieDetailsComponent, document.body);
       this.#comments.filter((comment) => this.#movies.comments.includes(comment.id)).forEach((comment) => render(new MovieDetailsCommentView(comment), this.#movieDetailsComponent.element.querySelector('.film-details__comments-list')));
-      document.addEventListener('keydown', onEscKeyDown);
-      this.#movieDetailsComponent.element.querySelector('.film-details__close-btn').addEventListener('click', handleCloseButtonClick);
+      document.addEventListener('keydown', documentKeydownHandler);
+      this.#movieDetailsComponent.element.querySelector('.film-details__close-btn').addEventListener('click', movieDetailsCloseButtonClickHandler);
     };
 
     this.#movieCardComponent.element.querySelector('.film-card__link').addEventListener('click', onCardClick);

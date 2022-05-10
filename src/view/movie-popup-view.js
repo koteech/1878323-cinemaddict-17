@@ -91,7 +91,7 @@ const createMovieDetailsTemplate = (movieInfo, movieCommentsIds, userDetails) =>
 `;
 
 
-export default class MovieDetailsView {
+export default class MoviePopupView {
   #movieInfo = {};
   #movieCommentsIds = [];
   #element = null;
