@@ -1,7 +1,7 @@
 import {createElement} from '../render';
 import {getHumanDate} from '../utils';
 
-const createMovieDetailsTemplate = (movieInfo, movieCommentsIds, userDetails) => `
+const createMoviePopupTemplate = (movieInfo, movieCommentsIds, userDetails) => `
 <section class="film-details">
 	<form class="film-details__inner" action="" method="get">
 		<div class="film-details__top-container">
@@ -51,7 +51,7 @@ const createMovieDetailsTemplate = (movieInfo, movieCommentsIds, userDetails) =>
 							</tr>
 							<tr class="film-details__row">
 								<td class="film-details__term">Genres</td>
-							  <td class="film-details__cell">${movieInfo.genre.reduce((total, item) => `${total} <span class="film-details__genre">${item}</span>` , '')} </td>
+							  <td class="film-details__cell">${movieInfo.genre.reduce((total, item) => `${total} <span class="film-details__genre">${item}</span>`, '')} </td>
 							</tr>
 						</tbody>
 					</table>
@@ -91,26 +91,30 @@ const createMovieDetailsTemplate = (movieInfo, movieCommentsIds, userDetails) =>
 `;
 
 
-export default class MovieDetailsView {
+export default class MoviePopupView {
+  #movieInfo = {};
+  #movieCommentsIds = [];
+  #element = null;
+  #userDetails = null;
+
   constructor(movie) {
-    this.filmInfo = movie.filmInfo;
-    this.movieCommentsIds = movie.comments;
-    this.userDetails = movie.userDetails;
+    this.#movieInfo = movie.filmInfo;
+    this.#movieCommentsIds = movie.comments;
+    this.#userDetails = movie.userDetails;
   }
 
-  getTemplate() {
-    return createMovieDetailsTemplate(this.filmInfo, this.movieCommentsIds, this.userDetails);
+  get template() {
+    return createMoviePopupTemplate(this.#movieInfo, this.#movieCommentsIds, this.#userDetails);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
-
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }

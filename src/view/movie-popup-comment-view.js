@@ -1,7 +1,7 @@
 import {createElement} from '../render';
 import {getDateForComment} from '../utils';
 
-const createMovieDetailsCommentTemplate = (comment) => `
+const createMoviePopupCommentTemplate = (comment) => `
 <li class="film-details__comment">
     <span class="film-details__comment-emoji">
         <img src="./images/emoji/${comment.emotion}.png" width="55" height="55" alt="emoji-${comment.emotion}">
@@ -15,24 +15,27 @@ const createMovieDetailsCommentTemplate = (comment) => `
 </li>
 `;
 
-export default class MovieDetailsCommentView {
+export default class MoviePopupCommentView {
+  #element = null;
+  #comment = null;
+
   constructor(comment) {
-    this.comment = comment;
+    this.#comment = comment;
   }
 
-  getTemplate() {
-    return createMovieDetailsCommentTemplate(this.comment);
+  get template() {
+    return createMoviePopupCommentTemplate(this.#comment);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }

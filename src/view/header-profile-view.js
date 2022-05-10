@@ -15,25 +15,26 @@ const createProfileTemplate = (length) => `
 </section>
 `;
 
-export default class ProfileView {
+export default class HeaderProfileView {
+  #movieWatchedCount = null;
+  #element = null;
+
   constructor(movies) {
-    this.movieWatchedCount = movies.filter((movie) => movie.userDetails.alreadyWatched).length;
+    this.#movieWatchedCount = movies.filter((movie) => movie.userDetails.alreadyWatched).length;
   }
 
-  getTemplate() {
-    return createProfileTemplate(this.movieWatchedCount);
+  get template() {
+    return createProfileTemplate(this.#movieWatchedCount);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
-
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
