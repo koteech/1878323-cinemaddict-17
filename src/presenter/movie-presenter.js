@@ -92,6 +92,34 @@ export default class MainPresenter {
     const movieCardComponent = new MovieCardView(movie);
     render(movieCardComponent, MovieCountainerElement);
 
+    const onEscKeyDown = (evt) => {
+      if (evt.key === 'Escape' || evt.key === 'Esc') {
+        closeMovieDetails(evt, this.#movieDetailsComponent);
+      }
+    };
+
+    const handleCloseButtonClick = (evt) => {
+      closeMovieDetails(evt, this.#movieDetailsComponent);
+    };
+
+    function closeMovieDetails(evt, component) {
+      evt.preventDefault();
+      component.element.remove();
+      component.removeElement();
+      document.removeEventListener('keydown', onEscKeyDown);
+      document.body.classList.remove('hide-overflow');
+    }
+
+    const onCardClick = () => {
+      document.body.classList.add('hide-overflow');
+      this.#movieDetailsComponent = new MovieDetailsView(movie);
+      render(this.#movieDetailsComponent, document.body);
+      this.#comments.filter((comment) => movie.comments.includes(comment.id)).forEach((comment) => render(new MovieDetailsCommentView(comment), this.#movieDetailsComponent.element.querySelector('.film-details__comments-list')));
+      document.addEventListener('keydown', onEscKeyDown);
+      this.#movieDetailsComponent.element.querySelector('.film-details__close-btn').addEventListener('click', handleCloseButtonClick);
+    };
+
+    movieCardComponent.element.querySelector('.film-card__link').addEventListener('click', onCardClick);
   }
 
   #handleLoadMoreButtonClick = (evt) => {
