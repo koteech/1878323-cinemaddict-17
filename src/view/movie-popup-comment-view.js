@@ -1,4 +1,4 @@
-import {createElement} from '../render';
+import AbstractView from '../framework/view/abstract-view';
 import {getDateForComment} from '../utils';
 
 const createMoviePopupCommentTemplate = (comment) => `
@@ -15,27 +15,15 @@ const createMoviePopupCommentTemplate = (comment) => `
 </li>
 `;
 
-export default class MoviePopupCommentView {
-  #element = null;
+export default class MoviePopupCommentView extends AbstractView {
   #comment = null;
 
   constructor(comment) {
+    super();
     this.#comment = comment;
   }
 
   get template() {
     return createMoviePopupCommentTemplate(this.#comment);
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

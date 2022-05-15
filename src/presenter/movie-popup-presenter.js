@@ -1,4 +1,4 @@
-import {render} from '../render';
+import {render} from '../framework/render';
 import MoviePopupCommentView from '../view/movie-popup-comment-view';
 import MoviePopupView from '../view/movie-popup-view';
 

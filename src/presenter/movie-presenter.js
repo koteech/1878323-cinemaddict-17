@@ -1,4 +1,4 @@
-import {render} from '../render';
+import {render} from '../framework/render';
 import FooterStatisticsView from '../view/footer-statistics-view';
 import MovieCardView from '../view/movie-card-view';
 import MovieContainerView from '../view/movie-container-view';

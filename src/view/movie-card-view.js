@@ -1,4 +1,4 @@
-import {createElement} from '../render';
+import AbstractView from '../framework/view/abstract-view';
 import dayjs from 'dayjs';
 
 const createBoardTemplate = (movie) => `
@@ -24,27 +24,15 @@ const createBoardTemplate = (movie) => `
 </article>
 `;
 
-export default class MovieCardView {
+export default class MovieCardView extends AbstractView {
   #movie = {};
-  #element = null;
 
   constructor(movie) {
+    super();
     this.#movie = movie;
   }
 
   get template() {
     return createBoardTemplate(this.#movie);
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }
