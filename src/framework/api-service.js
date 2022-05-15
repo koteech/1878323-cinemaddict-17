@@ -46,7 +46,7 @@ export default class ApiService {
    * @param {Response} response Объект ответа
    * @returns {Promise<JSON>}
    */
-  static parseResponse = (response) => responseon();
+  static parseResponse = (response) => response.json();
 
   /**
    * Метод для проверки ответа
