@@ -1,4 +1,4 @@
-import {createElement} from '../render';
+import AbstractView from '../framework/view/abstract-view';
 import dayjs from 'dayjs';
 
 const createBoardTemplate = (movie) => `
@@ -24,11 +24,11 @@ const createBoardTemplate = (movie) => `
 </article>
 `;
 
-export default class MovieCardView {
+export default class MovieCardView extends AbstractView {
   #movie = {};
-  #element = null;
 
   constructor(movie) {
+    super();
     this.#movie = movie;
   }
 
@@ -36,15 +36,14 @@ export default class MovieCardView {
     return createBoardTemplate(this.#movie);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setClickHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.querySelector('.film-card__link').addEventListener('click', this.#clickHandler);
+  };
 
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    document.body.classList.add('hide-overflow');
+    this._callback.click();
+  };
 }

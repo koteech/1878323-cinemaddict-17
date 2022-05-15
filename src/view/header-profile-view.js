@@ -1,4 +1,4 @@
-import {createElement} from '../render';
+import AbstractView from '../framework/view/abstract-view';
 
 const profileMap = {
   novice: [1, 10],
@@ -15,26 +15,15 @@ const createProfileTemplate = (length) => `
 </section>
 `;
 
-export default class HeaderProfileView {
+export default class HeaderProfileView extends AbstractView {
   #movieWatchedCount = null;
-  #element = null;
 
   constructor(movies) {
+    super();
     this.#movieWatchedCount = movies.filter((movie) => movie.userDetails.alreadyWatched).length;
   }
 
   get template() {
     return createProfileTemplate(this.#movieWatchedCount);
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

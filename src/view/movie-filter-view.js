@@ -1,19 +1,17 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view';
 
-const getFilters = (movies) => {
-  const filtersMap = {
-    watchlist: (arr) => arr.filter((movie) => movie.userDetails.watchlist).length,
-    history: (arr) => arr.filter((movie) => movie.userDetails.alreadyWatched).length,
-    favorites: (arr) => arr.filter((movie) => movie.userDetails.favorite).length,
-  };
-
-  return Object.entries(filtersMap).map(([filterName, countMovies]) => (
-    {
-      name: filterName,
-      count: countMovies(movies),
-    }
-  ));
+const filtersMap = {
+  watchlist: (arr) => arr.filter((movie) => movie.userDetails.watchlist).length,
+  history: (arr) => arr.filter((movie) => movie.userDetails.alreadyWatched).length,
+  favorites: (arr) => arr.filter((movie) => movie.userDetails.favorite).length,
 };
+
+const getFilters = (films) => Object.entries(filtersMap).map(([filterName, countFilms]) => (
+  {
+    name: filterName,
+    count: countFilms(films),
+  }
+));
 
 const createFilterItemTemplate = (filter) => `<a href="#${filter.name}" class="main-navigation__item">${filter.name.charAt(0).toUpperCase() + filter.name.slice(1)} <span class="main-navigation__item-count">${filter.count}</span></a>`;
 
@@ -23,27 +21,15 @@ const createFilterTemplate = (filters) => `<nav class="main-navigation">
 </nav>`;
 
 
-export default class MovieFilterView {
+export default class MovieFilterView extends AbstractView {
   #filters = [];
-  #element = null;
 
   constructor(movies) {
+    super();
     this.#filters = getFilters(movies);
   }
 
   get template() {
     return createFilterTemplate(this.#filters);
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

@@ -1,4 +1,4 @@
-import {render} from '../render';
+import {render} from '../framework/render';
 import FooterStatisticsView from '../view/footer-statistics-view';
 import MovieCardView from '../view/movie-card-view';
 import MovieContainerView from '../view/movie-container-view';
@@ -40,6 +40,7 @@ export default class MoviePresenter {
   #mostCommentedMovieListContainerComponent = new MovieContainerView();
   #showMoreButtonComponent = new ShowMoreButtonView();
 
+
   constructor(mainContainer, profileElement, footerStatisticsElement, movieModel) {
     this.#mainContainer = mainContainer;
     this.#profileElement = profileElement;
@@ -51,6 +52,7 @@ export default class MoviePresenter {
 
   init = () => {
     this.#renderPage();
+    this.#renderMovieCards();
   };
 
   #renderPage() {
@@ -58,7 +60,6 @@ export default class MoviePresenter {
     render(new FooterStatisticsView(this.#movies), this.#footerStatisticsElement);
     render(new MovieFilterView(this.#movies), this.#mainContainer);
     render(this.#movieSortComponent, this.#mainContainer);
-
     render(this.#movieSectionComponent, this.#mainContainer);
     render(this.#allMovieListComponent, this.#movieSectionComponent.element);
 
@@ -74,15 +75,18 @@ export default class MoviePresenter {
     render(this.#allMovieListContainerComponent, this.#allMovieListComponent.element);
     render(this.#topRatedMovieListContainerComponent, this.#topRatedMovieListComponent.element);
     render(this.#mostCommentedMovieListContainerComponent, this.#mostCommentedMovieListComponent.element);
+  }
 
+  #renderMovieCards() {
     this.#movies.slice(0, Math.min(this.#movies.length, ALL_MOVIE_COUNT_PER_STEP)).forEach((movie) => this.#renderMovie(movie, this.#allMovieListContainerComponent.element));
     if (this.#movies.length > ALL_MOVIE_COUNT_PER_STEP) {
       render(this.#showMoreButtonComponent, this.#allMovieListComponent.element);
-      this.#showMoreButtonComponent.element.addEventListener('click', this.#showMoreButtonClickHandler);
+      this.#showMoreButtonComponent.setClickHandler(this.#showMoreButtonClickHandler);
     }
     this.#movies.sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating).slice(0, Math.min(this.#movies.length, TOP_RATED_MOVIE_COUNT_PER_STEP)).forEach((movie) => this.#renderMovie(movie, this.#topRatedMovieListContainerComponent.element));
     this.#movies.sort((a, b) => b.comments.length - a.comments.length).slice(0, Math.min(this.#movies.length, MOST_COMMENTED_MOVIE_COUNT_PER_STEP)).forEach((movie) => this.#renderMovie(movie, this.#mostCommentedMovieListContainerComponent.element));
   }
+
 
   #renderMovie(movie, movieContainer) {
     const movieCardComponent = new MovieCardView(movie);
@@ -92,8 +96,7 @@ export default class MoviePresenter {
     moviePopupPresenter.init();
   }
 
-  #showMoreButtonClickHandler = (evt) => {
-    evt.preventDefault();
+  #showMoreButtonClickHandler = () => {
     this.#movies.slice(this.#renderedAllMovieShowen, this.#renderedAllMovieShowen + ALL_MOVIE_COUNT_PER_STEP).forEach((movie) => this.#renderMovie(movie, this.#allMovieListContainerComponent.element));
     this.#renderedAllMovieShowen += ALL_MOVIE_COUNT_PER_STEP;
     if (this.#movies.length <= this.#renderedAllMovieShowen) {

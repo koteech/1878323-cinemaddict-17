@@ -1,4 +1,4 @@
-import {createElement} from '../render';
+import AbstractView from '../framework/view/abstract-view';
 import {getHumanDate} from '../utils';
 
 const createMoviePopupTemplate = (movieInfo, movieCommentsIds, userDetails) => `
@@ -91,13 +91,13 @@ const createMoviePopupTemplate = (movieInfo, movieCommentsIds, userDetails) => `
 `;
 
 
-export default class MoviePopupView {
+export default class MoviePopupView extends AbstractView {
   #movieInfo = {};
   #movieCommentsIds = [];
-  #element = null;
   #userDetails = null;
 
   constructor(movie) {
+    super();
     this.#movieInfo = movie.filmInfo;
     this.#movieCommentsIds = movie.comments;
     this.#userDetails = movie.userDetails;
@@ -107,14 +107,14 @@ export default class MoviePopupView {
     return createMoviePopupTemplate(this.#movieInfo, this.#movieCommentsIds, this.#userDetails);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
-  }
+  setCloseButtonClickHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#closeButtonClickHandler);
+  };
 
-  removeElement() {
-    this.#element = null;
-  }
+  #closeButtonClickHandler = (evt) => {
+    evt.preventDefault();
+    document.body.classList.remove('hide-overflow');
+    this._callback.click();
+  };
 }
