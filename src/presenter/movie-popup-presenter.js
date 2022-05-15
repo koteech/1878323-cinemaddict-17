@@ -3,15 +3,15 @@ import MoviePopupCommentView from '../view/movie-popup-comment-view';
 import MoviePopupView from '../view/movie-popup-view';
 
 export default class MoviePopupPresenter {
-  #movies = null;
+  #movie = null;
   #comments = null;
   #movieCardComponent = null;
   #moviePopupComponent = null;
 
 
-  constructor(movieCardComponent, movies, comments) {
+  constructor(movieCardComponent, movie, comments) {
     this.#movieCardComponent = movieCardComponent;
-    this.#movies = movies;
+    this.#movie = movie;
     this.#comments = comments;
   }
 
@@ -20,33 +20,40 @@ export default class MoviePopupPresenter {
   };
 
   #renderMoviePopup() {
+    const movieCardClickHandler = () => {
+      this.#renderMovieDetails(this.#movie);
+    };
+
+    this.#movieCardComponent.setClickHandler(movieCardClickHandler);
+  }
+
+  #renderMovieDetails() {
+    this.#moviePopupComponent = new MoviePopupView(this.#movie);
+    render(this.#moviePopupComponent, document.body);
+    this.#getCommentsByMovie().forEach((comment) => render(new MoviePopupCommentView(comment), this.#moviePopupComponent.element.querySelector('.film-details__comments-list')));
+
     const documentKeydownHandler = (evt) => {
       if (evt.key === 'Escape' || evt.key === 'Esc') {
-        closeMoviePopup(evt, this.#moviePopupComponent);
+        evt.preventDefault();
+        this.#moviePopupComponent.element.remove();
+        this.#moviePopupComponent.removeElement();
+        document.removeEventListener('keydown', documentKeydownHandler);
+        document.body.classList.remove('hide-overflow');
       }
     };
 
-    const moviePopupCloseButtonClickHandler = (evt) => {
-      closeMoviePopup(evt, this.#moviePopupComponent);
-    };
-
-    function closeMoviePopup(evt, component) {
-      evt.preventDefault();
-      component.element.remove();
-      component.removeElement();
-      document.removeEventListener('keydown', documentKeydownHandler);
-      document.body.classList.remove('hide-overflow');
-    }
-
-    const movieCardClickHandler = () => {
-      document.body.classList.add('hide-overflow');
-      this.#moviePopupComponent = new MoviePopupView(this.#movies);
-      render(this.#moviePopupComponent, document.body);
-      this.#comments.filter((comment) => this.#movies.comments.includes(comment.id)).forEach((comment) => render(new MoviePopupCommentView(comment), this.#moviePopupComponent.element.querySelector('.film-details__comments-list')));
-      document.addEventListener('keydown', documentKeydownHandler);
-      this.#moviePopupComponent.element.querySelector('.film-details__close-btn').addEventListener('click', moviePopupCloseButtonClickHandler);
-    };
-
-    this.#movieCardComponent.element.querySelector('.film-card__link').addEventListener('click', movieCardClickHandler);
+    document.addEventListener('keydown', documentKeydownHandler);
+    this.#moviePopupComponent.setCloseButtonClickHandler(this.#handleClosefilmDetails);
   }
+
+
+  #handleClosefilmDetails = () => {
+    this.#moviePopupComponent.element.remove();
+    this.#moviePopupComponent.removeElement();
+  };
+
+  #getCommentsByMovie() {
+    return this.#comments.filter((comment) => this.#movie.comments.includes(comment.id));
+  }
+
 }
