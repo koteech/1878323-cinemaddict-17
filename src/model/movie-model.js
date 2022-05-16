@@ -1,8 +1,8 @@
 import {generateMovies} from '../mock/movie';
 import {generateComments} from '../mock/comments';
 
-const MOVIES_COUNT =12;
-const TOTAL_COMMENTS_COUNT = 40;
+const MOVIES_COUNT = 12;
+const TOTAL_COMMENTS_COUNT = 400;
 
 export default class MovieModel {
   #comments = null;
