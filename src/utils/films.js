@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import {nanoid} from 'nanoid';
 
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -46,8 +47,40 @@ const getTimeFromMins = (mins) => {
   return `${hours}h ${minutes}m`;
 };
 
+const getWeightForNull = (A, B) => {
+  if (A === null && B === null) {
+    return 0;
+  }
+
+  if (A === null) {
+    return 1;
+  }
+
+  if (B === null) {
+    return -1;
+  }
+};
+
+const sortMovieByDate = (filmA, filmB) => {
+  const weight = getWeightForNull(filmA.filmInfo.release.date, filmB.filmInfo.release.date);
+  return weight ?? dayjs(filmA.filmInfo.release.date).diff(dayjs(filmB.filmInfo.release.date));
+};
+
+const sortMovieByRating = (filmA, filmB) => {
+  const weight = getWeightForNull(filmA.filmInfo.totalRating, filmB.filmInfo.totalRating);
+  return weight ?? filmB.filmInfo.totalRating - filmA.filmInfo.totalRating;
+};
+
+const addComponentId = (films) => films
+  .map((film) => ({
+    ...film,
+    componentId: `${nanoid()}-${film.id}`,
+  }));
 
 export {
+  sortMovieByDate,
+  sortMovieByRating,
+  addComponentId,
   getRandomInteger,
   createDataIds,
   getRandomArrayElement,

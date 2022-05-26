@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view';
-import MovieDetailsCommentView from '../view/movie-details-comment-view';
-import {getHumanDate, getTimeFromMins} from '../utils/utils';
+import MovieDetailsCommentView from './movie-comment-view';
+import {getHumanDate, getTimeFromMins} from '../utils/films';
 
 const createMovieDetailsTemplate = (movie, movieComments) => {
   const commentsTemplate = movieComments.map((comment) => new MovieDetailsCommentView(comment).template).join('');

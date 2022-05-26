@@ -1,4 +1,4 @@
-import {generateDate, getRandomArrayElement} from '../utils/utils';
+import {generateDate, getRandomArrayElement} from '../utils/films';
 import {nanoid} from 'nanoid';
 
 const TEXTS = [

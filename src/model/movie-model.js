@@ -1,6 +1,6 @@
 import {generateMovies} from '../mock/movie';
 import {generateComments} from '../mock/comments';
-import {addComponentId} from '../utils/common';
+import {addComponentId} from '../utils/films';
 
 const MOVIES_COUNT = 12;
 const TOTAL_COMMENTS_COUNT = 400;
