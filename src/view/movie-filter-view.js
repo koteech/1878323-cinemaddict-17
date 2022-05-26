@@ -6,10 +6,10 @@ const filtersMap = {
   favorites: (arr) => arr.filter((movie) => movie.userDetails.favorite).length,
 };
 
-const getFilters = (films) => Object.entries(filtersMap).map(([filterName, countFilms]) => (
+const getFilters = (movies) => Object.entries(filtersMap).map(([filterName, countMovies]) => (
   {
     name: filterName,
-    count: countFilms(films),
+    count: countMovies(movies),
   }
 ));
 

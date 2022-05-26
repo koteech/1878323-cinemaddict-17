@@ -1,4 +1,5 @@
-import {createDataIds, generateDate, getRandomArrayElement} from '../utils';
+import {generateDate, getRandomArrayElement} from '../utils/films';
+import {nanoid} from 'nanoid';
 
 const TEXTS = [
   'Interesting setting and a good cast',
@@ -20,12 +21,13 @@ const EMOJIS = [
   'angry',
 ];
 
-const generateComment = (id) => ({
-  id: id,
+const generateComment = () => ({
+  id: nanoid(),
   author: getRandomArrayElement(AUTHORS),
   comment: getRandomArrayElement(TEXTS),
   date: generateDate(),
   emotion: `${getRandomArrayElement(EMOJIS)}`,
 });
 
-export const generateComments = (size) => createDataIds(size).map((id) => generateComment(id));
+export const generateComments = (size) => Array.from({length: size}, () => generateComment());
+
