@@ -1,6 +1,6 @@
 import {remove, render} from '../framework/render';
 import {sortMovieByDate, sortMovieByRating} from '../utils/films';
-import {SortType} from '../const';
+import {SortType} from '../utils/const';
 import FooterStatisticsView from '../view/footer-statistics-view';
 import MovieContainerView from '../view/movie-container-view';
 import MoviePresenter from './movie-presenter';

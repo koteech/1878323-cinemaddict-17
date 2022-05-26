@@ -1,6 +1,5 @@
 import AbstractView from '../framework/view/abstract-view';
-import {SortType} from '../const';
-
+import {SortType} from '../utils/const';
 
 const createBoardTemplate = () => `<ul class="sort">
 <li><a href="#" class="sort__button sort__button--active" data-sort-type="${SortType.DEFAULT}">Sort by default</a></li>
