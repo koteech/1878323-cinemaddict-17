@@ -4,4 +4,5 @@ const SortType = {
   BY_RATING: 'by-rating',
 };
 
+
 export {SortType};
