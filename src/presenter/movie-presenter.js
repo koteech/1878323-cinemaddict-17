@@ -1,106 +1,123 @@
-import {render} from '../framework/render';
-import FooterStatisticsView from '../view/footer-statistics-view';
+import {remove, render, replace} from '../framework/render';
 import MovieCardView from '../view/movie-card-view';
-import MovieContainerView from '../view/movie-container-view';
-import MoviePopupPresenter from './movie-popup-presenter';
-import MovieFilterView from '../view/movie-filter-view';
-import MovieListView from '../view/movie-list-view';
-import MovieNoDataView from '../view/movie-no-data-view';
-import MovieSectionView from '../view/movie-section-view';
-import MovieSortView from '../view/movie-sort-view';
-import ProfileView from '../view/header-profile-view';
-import ShowMoreButtonView from '../view/show-more-button-view';
+import MovieDetailsView from '../view/movie-details-view';
 
-const ALL_MOVIE_COUNT_PER_STEP = 5;
-const TOP_RATED_MOVIE_COUNT_PER_STEP = 2;
-const MOST_COMMENTED_MOVIE_COUNT_PER_STEP = 2;
-
-const SectionTitle = {
-  all: 'All movies. Upcoming',
-  topRated: 'Top rated',
-  mostCommented: 'Most commented',
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  OPENED: 'OPENED',
 };
 
 export default class MoviePresenter {
-  #mainContainer = null;
-  #profileElement = null;
-  #footerStatisticsElement = null;
   #comments = null;
-  #movies = null;
+  #movieCountainerElement = null;
+  #movieCardComponent = null;
+  #movieDetailsComponent = null;
+  #pageBodyElement = null;
   #movieModel = null;
-  #renderedAllMovieShowen = ALL_MOVIE_COUNT_PER_STEP;
+  #changeData = null;
+  #changeMode = null;
+  #mode = Mode.DEFAULT;
 
-  #movieSortComponent = new MovieSortView();
-  #movieSectionComponent = new MovieSectionView();
-  #allMovieListComponent = new MovieListView(SectionTitle.all);
-  #allMovieListContainerComponent = new MovieContainerView();
-  #topRatedMovieListComponent = new MovieListView(SectionTitle.topRated, true);
-  #topRatedMovieListContainerComponent = new MovieContainerView();
-  #mostCommentedMovieListComponent = new MovieListView(SectionTitle.mostCommented, true);
-  #mostCommentedMovieListContainerComponent = new MovieContainerView();
-  #showMoreButtonComponent = new ShowMoreButtonView();
-
-
-  constructor(mainContainer, profileElement, footerStatisticsElement, movieModel) {
-    this.#mainContainer = mainContainer;
-    this.#profileElement = profileElement;
-    this.#footerStatisticsElement = footerStatisticsElement;
+  constructor(movieCountainerElement, pageBodyElement, movieModel, changeData, changeMode) {
+    this.#movieCountainerElement = movieCountainerElement;
+    this.#pageBodyElement = pageBodyElement;
     this.#movieModel = movieModel;
-    this.#comments = [...this.#movieModel.comments];
-    this.#movies = [...this.#movieModel.movies];
+    this.#changeData = changeData;
+    this.#changeMode = changeMode;
   }
 
-  init = () => {
-    this.#renderPage();
-    this.#renderMovieCards();
+  init(movie) {
+    this.movie = movie;
+    this.#comments = this.#movieModel.getCommentsByMovie(movie.id);
+
+    const prevMovieCardComponent = this.#movieCardComponent;
+    const prevMovieDetailsComponent = this.#movieDetailsComponent;
+
+    this.#movieCardComponent = new MovieCardView(this.movie);
+    this.#movieDetailsComponent = new MovieDetailsView(this.movie, this.#comments);
+
+    this.#movieCardComponent.setClickHandler(this.#openMovieDetails);
+    this.#movieCardComponent.setWatchListClickHandler(this.#handleWatchListClick);
+    this.#movieCardComponent.setWatchedClickHandler(this.#handleWatchedClick);
+    this.#movieCardComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+    this.#movieDetailsComponent.setCloseButtonClickHandler(this.#closeMovieDetails);
+    this.#movieDetailsComponent.setWatchListClickHandler(this.#handleWatchListClick);
+    this.#movieDetailsComponent.setWatchedClickHandler(this.#handleWatchedClick);
+    this.#movieDetailsComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+
+    if (prevMovieCardComponent === null) {
+      return render(this.#movieCardComponent, this.#movieCountainerElement);
+    }
+
+    replace(this.#movieCardComponent, prevMovieCardComponent);
+    remove(prevMovieCardComponent);
+    if (this.#mode === Mode.OPENED) {
+      replace(this.#movieDetailsComponent, prevMovieDetailsComponent);
+      remove(prevMovieDetailsComponent);
+    }
+  }
+
+  destroy = () => {
+    remove(this.#movieCardComponent);
+    remove(this.#movieDetailsComponent);
   };
 
-  #renderPage() {
-    render(new ProfileView(this.#movies), this.#profileElement);
-    render(new FooterStatisticsView(this.#movies), this.#footerStatisticsElement);
-    render(new MovieFilterView(this.#movies), this.#mainContainer);
-    render(this.#movieSortComponent, this.#mainContainer);
-    render(this.#movieSectionComponent, this.#mainContainer);
-    render(this.#allMovieListComponent, this.#movieSectionComponent.element);
+  #openMovieDetails = () => {
+    render(this.#movieDetailsComponent, this.#pageBodyElement);
+    document.addEventListener('keydown', this.#escKeydownHandler);
+    this.#changeMode();
+    this.#mode = Mode.OPENED;
 
-    if (this.#movies.length < 1) {
-      render(new MovieNoDataView(), this.#allMovieListComponent.element);
-      this.#movieSortComponent.element.remove();
-      this.#allMovieListComponent.element.firstElementChild.remove();
-      return true;
+  };
+
+  #closeMovieDetails = () => {
+    this.#mode = Mode.DEFAULT;
+    this.#movieDetailsComponent.element.remove();
+    document.removeEventListener('keydown', this.#escKeydownHandler);
+  };
+
+  #escKeydownHandler = (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      document.body.classList.remove('hide-overflow');
+      this.#closeMovieDetails();
     }
+  };
 
-    render(this.#mostCommentedMovieListComponent, this.#movieSectionComponent.element);
-    render(this.#topRatedMovieListComponent, this.#movieSectionComponent.element);
-    render(this.#allMovieListContainerComponent, this.#allMovieListComponent.element);
-    render(this.#topRatedMovieListContainerComponent, this.#topRatedMovieListComponent.element);
-    render(this.#mostCommentedMovieListContainerComponent, this.#mostCommentedMovieListComponent.element);
-  }
+  #handleWatchListClick = () => {
+    this.#changeData({
+      ...this.movie,
+      userDetails: {
+        ...this.movie.userDetails,
+        watchlist: !this.movie.userDetails.watchlist,
+      }
+    });
+  };
 
-  #renderMovieCards() {
-    this.#movies.slice(0, Math.min(this.#movies.length, ALL_MOVIE_COUNT_PER_STEP)).forEach((movie) => this.#renderMovie(movie, this.#allMovieListContainerComponent.element));
-    if (this.#movies.length > ALL_MOVIE_COUNT_PER_STEP) {
-      render(this.#showMoreButtonComponent, this.#allMovieListComponent.element);
-      this.#showMoreButtonComponent.setClickHandler(this.#showMoreButtonClickHandler);
-    }
-    this.#movies.sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating).slice(0, Math.min(this.#movies.length, TOP_RATED_MOVIE_COUNT_PER_STEP)).forEach((movie) => this.#renderMovie(movie, this.#topRatedMovieListContainerComponent.element));
-    this.#movies.sort((a, b) => b.comments.length - a.comments.length).slice(0, Math.min(this.#movies.length, MOST_COMMENTED_MOVIE_COUNT_PER_STEP)).forEach((movie) => this.#renderMovie(movie, this.#mostCommentedMovieListContainerComponent.element));
-  }
+  #handleWatchedClick = () => {
+    this.#changeData({
+      ...this.movie,
+      userDetails: {
+        ...this.movie.userDetails,
+        alreadyWatched: !this.movie.userDetails.alreadyWatched,
+      }
+    });
+  };
 
+  #handleFavoriteClick = () => {
+    this.#changeData({
+      ...this.movie,
+      userDetails: {
+        ...this.movie.userDetails,
+        favorite: !this.movie.userDetails.favorite,
+      }
+    });
+  };
 
-  #renderMovie(movie, movieContainer) {
-    const movieCardComponent = new MovieCardView(movie);
-    render(movieCardComponent, movieContainer);
-
-    const moviePopupPresenter = new MoviePopupPresenter(movieCardComponent, movie, this.#comments);
-    moviePopupPresenter.init();
-  }
-
-  #showMoreButtonClickHandler = () => {
-    this.#movies.slice(this.#renderedAllMovieShowen, this.#renderedAllMovieShowen + ALL_MOVIE_COUNT_PER_STEP).forEach((movie) => this.#renderMovie(movie, this.#allMovieListContainerComponent.element));
-    this.#renderedAllMovieShowen += ALL_MOVIE_COUNT_PER_STEP;
-    if (this.#movies.length <= this.#renderedAllMovieShowen) {
-      this.#showMoreButtonComponent.element.remove();
+  resetView = () => {
+    if (this.#mode !== Mode.DEFAULT) {
+      this.#closeMovieDetails();
     }
   };
 }
+

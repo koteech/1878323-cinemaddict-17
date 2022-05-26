@@ -1,4 +1,5 @@
-import {createDataIds, generateDate, getRandomArrayElement, getRandomInteger, getTimeFromMins} from '../utils';
+import {generateDate, getRandomArrayElement, getRandomInteger, getTimeFromMins} from '../utils/utils';
+import {nanoid} from 'nanoid';
 
 const TITLE = [
   'The Dance of Life',
@@ -59,9 +60,9 @@ const ACTORS = [
   'Scott Haze',
 ];
 
-const generateMovie = (id, comments) => ({
-  id: id,
-  comments: Array.from(new Set(Array.from({length: getRandomInteger(0, 6)}, () => getRandomArrayElement(comments.map((comment) => comment.id))))),
+const generateMovie = (comments) => ({
+  id: nanoid(),
+  comments: Array.from({length: getRandomInteger(0, 6)}, () => getRandomArrayElement(comments.map((comment) => comment.id))).filter((item, index, arr) => arr.indexOf(item) === index),
   filmInfo: {
     title: getRandomArrayElement(TITLE),
     alternativeTitle: getRandomArrayElement(TITLE),
@@ -87,4 +88,4 @@ const generateMovie = (id, comments) => ({
   }
 });
 
-export const generateMovies = (size, comments = []) => createDataIds(size).map((id) => generateMovie(id, comments));
+export const generateMovies = (size, comments = []) => Array.from({length: size}, () => generateMovie(comments));

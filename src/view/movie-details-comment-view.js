@@ -1,7 +1,7 @@
 import AbstractView from '../framework/view/abstract-view';
-import {getDateForComment} from '../utils';
+import {getDateForComment} from '../utils/utils';
 
-const createMoviePopupCommentTemplate = (comment) => `
+const createMovieDetailsCommentTemplate = (comment) => `
 <li class="film-details__comment">
     <span class="film-details__comment-emoji">
         <img src="./images/emoji/${comment.emotion}.png" width="55" height="55" alt="emoji-${comment.emotion}">
@@ -15,7 +15,7 @@ const createMoviePopupCommentTemplate = (comment) => `
 </li>
 `;
 
-export default class MoviePopupCommentView extends AbstractView {
+export default class MovieDetailsCommentView extends AbstractView {
   #comment = null;
 
   constructor(comment) {
@@ -24,6 +24,6 @@ export default class MoviePopupCommentView extends AbstractView {
   }
 
   get template() {
-    return createMoviePopupCommentTemplate(this.#comment);
+    return createMovieDetailsCommentTemplate(this.#comment);
   }
 }
