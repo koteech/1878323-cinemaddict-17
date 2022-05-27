@@ -25,10 +25,13 @@ export default class MovieSortView extends AbstractView {
       return;
     }
 
+    evt.preventDefault();
+    if (activeLink === evt.target) {
+      return;
+    }
     activeLink.classList.remove('sort__button--active');
     activeLink = evt.target;
-    evt.preventDefault();
-    evt.target.classList.add('sort__button--active');
+    activeLink.classList.add('sort__button--active');
     this._callback.SortTypeChange(evt.target.dataset.sortType);
   };
 }
