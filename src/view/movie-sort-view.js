@@ -2,12 +2,12 @@ import AbstractView from '../framework/view/abstract-view';
 import {SortType} from '../utils/const';
 
 const createBoardTemplate = () => `<ul class="sort">
-<li><a href="#" class="sort__button sort__button--active" id="${SortType.DEFAULT}" data-sort-type="${SortType.DEFAULT}">Sort by default</a></li>
-<li><a href="#" class="sort__button" id="${SortType.BY_DATE}" data-sort-type="${SortType.BY_DATE}">Sort by date</a></li>
-<li><a href="#" class="sort__button" id="${SortType.BY_RATING}" data-sort-type="${SortType.BY_RATING}">Sort by rating</a></li>
+<li><a href="#" class="sort__button sort__button--active" data-sort-type="${SortType.DEFAULT}">Sort by default</a></li>
+<li><a href="#" class="sort__button" data-sort-type="${SortType.BY_DATE}">Sort by date</a></li>
+<li><a href="#" class="sort__button" data-sort-type="${SortType.BY_RATING}">Sort by rating</a></li>
 </ul>`;
 
-let sortActiveType = SortType.DEFAULT;
+let activeLink;
 
 export default class MovieSortView extends AbstractView {
   get template() {
@@ -16,6 +16,7 @@ export default class MovieSortView extends AbstractView {
 
   setSortTypeChangeHandler = (callback) => {
     this._callback.SortTypeChange = callback;
+    activeLink = document.querySelector('.sort__button--active');
     this.element.addEventListener('click', this.#sortTypeChangeHandler);
   };
 
@@ -24,9 +25,9 @@ export default class MovieSortView extends AbstractView {
       return;
     }
 
+    activeLink.classList.remove('sort__button--active');
+    activeLink = evt.target;
     evt.preventDefault();
-    document.getElementById(sortActiveType).classList.remove('sort__button--active');
-    sortActiveType = evt.target.dataset.sortType;
     evt.target.classList.add('sort__button--active');
     this._callback.SortTypeChange(evt.target.dataset.sortType);
   };
