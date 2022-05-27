@@ -16,7 +16,7 @@ const getRandomArrayElement = (array) => {
 };
 
 const generateDate = () => {
-  const daysGap = getRandomInteger(-1, -60);
+  const daysGap = getRandomInteger(-1, -720);
 
   return dayjs().add(daysGap, 'day').toDate();
 };
@@ -61,7 +61,7 @@ const getWeightForNull = (A, B) => {
   }
 };
 
-const sortMovieByDate = (filmA, filmB) => {
+const sortMovieByDate = (filmB, filmA) => {
   const weight = getWeightForNull(filmA.filmInfo.release.date, filmB.filmInfo.release.date);
   return weight ?? dayjs(filmA.filmInfo.release.date).diff(dayjs(filmB.filmInfo.release.date));
 };
