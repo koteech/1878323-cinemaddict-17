@@ -21,14 +21,11 @@ export default class MovieSortView extends AbstractView {
   };
 
   #sortTypeChangeHandler = (evt) => {
-    if (evt.target.tagName !== 'A') {
+    if (evt.target.tagName !== 'A' || activeLink === evt.target) {
       return;
     }
 
     evt.preventDefault();
-    if (activeLink === evt.target) {
-      return;
-    }
     activeLink.classList.remove('sort__button--active');
     activeLink = evt.target;
     activeLink.classList.add('sort__button--active');
