@@ -1,9 +1,12 @@
-import AbstractView from '../framework/view/abstract-view';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import MovieDetailsCommentView from './movie-comment-view';
-import {getHumanDate, getTimeFromMins} from '../utils/films';
+import {getHumanDate, getTimeFromMins} from '../utils/movies';
 
 const createMovieDetailsTemplate = (movie, movieComments) => {
   const commentsTemplate = movieComments.map((comment) => new MovieDetailsCommentView(comment).template).join('');
+  const commentEmojiTemplate = movie.commentEmoji ?
+    `<img src="images/emoji/${movie.commentEmoji}.png" width="55" height="55" alt="emoji-${movie.commentEmoji}}"></img>`
+    : '';
 
   return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
@@ -76,9 +79,9 @@ const createMovieDetailsTemplate = (movie, movieComments) => {
         ${commentsTemplate}
         </ul>
         <div class="film-details__new-comment">
-          <div class="film-details__add-emoji-label"></div>
+          <div class="film-details__add-emoji-label">${commentEmojiTemplate}</div>
           <label class="film-details__comment-label">
-            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${movie.commentText ? movie.commentText : ''}</textarea>
           </label>
           <div class="film-details__emoji-list">
             <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
@@ -107,19 +110,83 @@ const createMovieDetailsTemplate = (movie, movieComments) => {
 };
 
 
-export default class MovieDetailsView extends AbstractView {
-  #movie = {};
-  #movieComments = [];
+export default class MovieDetailsView extends AbstractStatefulView {
+  #movieComments = null;
 
   constructor(movie, comments) {
     super();
-    this.#movie = movie;
+    this._state = this.#convertMovieToState(movie);
     this.#movieComments = comments;
+    this.#setInnerHandlers();
   }
 
   get template() {
-    return createMovieDetailsTemplate(this.#movie, this.#movieComments);
+    return createMovieDetailsTemplate(this._state, this.#movieComments);
   }
+
+  #convertMovieToState = (movie) => ({
+    ...movie,
+    commentEmoji: null,
+    commentText: null,
+    scrollTop: null
+  });
+
+  #convertStateToMovie = (state) => {
+    const movie = {...state};
+
+    delete movie.commentEmoji;
+    delete movie.commentText;
+    delete movie.scrollTop;
+
+    return movie;
+  };
+
+  _restoreHandlers = () => {
+    this.#setInnerHandlers();
+    this.#setOuterHandlers();
+  };
+
+  #restorePosition = () => {
+    this.element.scrollTop = this._state.scrollTop;
+    this.element.querySelector('.film-details__comment-input').scrollTop = this._state.localCommentScrollTop;
+  };
+
+  #localCommentEmojiClickHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      commentEmoji: evt.target.value,
+      scrollTop: this.element.scrollTop
+    });
+    this.element.querySelectorAll('.film-details__emoji-item')
+      .forEach((elem) => {
+        elem.checked = false;
+      });
+    this.element.querySelector(`#${evt.target.id}`).checked = true;
+    this.#restorePosition();
+  };
+
+  #localCommentInputHandler = (evt) => {
+    evt.preventDefault();
+    this._setState({
+      commentText: evt.target.value,
+      scrollTop: this.element.scrollTop,
+    });
+    this.#restorePosition();
+  };
+
+  #setInnerHandlers = () => {
+    this.element.querySelectorAll('.film-details__emoji-item')
+      .forEach((element) => element.addEventListener('click', this.#localCommentEmojiClickHandler));
+    this.element.querySelector('.film-details__comment-input')
+      .addEventListener('input', this.#localCommentInputHandler);
+  };
+
+  #setOuterHandlers = () => {
+    this.setCloseButtonClickHandler(this._callback.click);
+    this.setWatchListClickHandler(this._callback.watchListClick);
+    this.setWatchedClickHandler(this._callback.watchedClick);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
+  };
 
   setCloseButtonClickHandler = (callback) => {
     this._callback.click = callback;
@@ -160,5 +227,11 @@ export default class MovieDetailsView extends AbstractView {
   #favoriteClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.favoriteClick();
+  };
+
+  reset = (movie) => {
+    this.updateElement(
+      this.#convertMovieToState(movie)
+    );
   };
 }
