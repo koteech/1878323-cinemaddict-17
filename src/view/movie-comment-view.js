@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view';
-import {getDateForComment} from '../utils/films';
+import {getDateForComment} from '../utils/movies';
 
 const createCommentTemplate = (comment) => `
 <li class="film-details__comment">

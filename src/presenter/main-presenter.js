@@ -1,5 +1,5 @@
 import {remove, render} from '../framework/render';
-import {sortMovieByDate, sortMovieByRating} from '../utils/films';
+import {sortMovieByDate, sortMovieByRating} from '../utils/movies';
 import {SortType} from '../utils/const';
 import FooterStatisticsView from '../view/footer-statistics-view';
 import MovieContainerView from '../view/movie-container-view';
@@ -33,13 +33,13 @@ export default class MainPresenter {
   #mainContainer = null;
   #profileElement = null;
   #footerStatisticsElement = null;
-  #sourcedMovies = null;
-  #movieModel = null;
-  #movies = null;
-  #renderedAllMovieShowen = ALL_MOVIE_COUNT_PER_STEP;
-  #moviePresenter = new Map();
   #pageBodyElement = null;
+  #sourcedMovies = null;
+  #movies = null;
+  #movieModel = null;
+  #moviePresenter = new Map();
   #currentSortType = null;
+  #renderedAllMovieShowen = ALL_MOVIE_COUNT_PER_STEP;
 
   #movieSortComponent = new MovieSortView();
   #movieSectionComponent = new MovieSectionView();
@@ -150,7 +150,7 @@ export default class MainPresenter {
       .forEach((presenter) => presenter.init(updatedMovie));
   };
 
-  #sortFilms = (sortType) => {
+  #sortMovies = (sortType) => {
     switch (sortType) {
       case SortType.BY_DATE:
         this.#movies.sort(sortMovieByDate);
@@ -186,7 +186,7 @@ export default class MainPresenter {
       return;
     }
 
-    this.#sortFilms(sortType);
+    this.#sortMovies(sortType);
     this.#clearMovieCards();
     this.#renderMovieCards();
   };

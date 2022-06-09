@@ -72,6 +72,7 @@ export default class MoviePresenter {
 
   #closeMovieDetails = () => {
     this.#mode = Mode.DEFAULT;
+    this.#movieDetailsComponent.reset(this.movie);
     this.#movieDetailsComponent.element.remove();
     document.removeEventListener('keydown', this.#escKeydownHandler);
   };
