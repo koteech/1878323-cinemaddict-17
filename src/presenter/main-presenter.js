@@ -147,6 +147,7 @@ export default class MainPresenter {
   }
 
   #changeData = (updatedMovie) => {
+
     this.#moviePresenter.get(updatedMovie.id)
       .forEach((presenter) => presenter.init(updatedMovie));
   };
