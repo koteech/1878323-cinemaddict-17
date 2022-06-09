@@ -161,7 +161,7 @@ export default class MovieDetailsView extends AbstractStatefulView {
       .forEach((elem) => {
         elem.checked = false;
       });
-    evt.target.checked = true;
+    this.element.querySelector(`#${evt.target.id}`).checked = true;
     this.#restorePosition();
   };
 
