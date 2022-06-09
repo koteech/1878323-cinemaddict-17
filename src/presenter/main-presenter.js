@@ -1,5 +1,5 @@
 import {remove, render} from '../framework/render';
-import {sortMovieByDate, sortMovieByRating} from '../utils/films';
+import {sortMovieByDate, sortMovieByRating} from '../utils/movies';
 import {SortType} from '../utils/const';
 import FooterStatisticsView from '../view/footer-statistics-view';
 import MovieContainerView from '../view/movie-container-view';
@@ -145,9 +145,10 @@ export default class MainPresenter {
     render(new MovieFilterView(this.#movieModel.movies), this.#mainContainer);
   }
 
-  #changeData = (updatedMovie) => {
-    this.#moviePresenter.get(updatedMovie.id)
-      .forEach((presenter) => presenter.init(updatedMovie));
+  #changeData = () => {
+    this.#moviePresenter
+      .forEach((value) => value
+        .forEach((presenter) => presenter.resetView()));
   };
 
   #sortFilms = (sortType) => {

@@ -1,5 +1,4 @@
 import dayjs from 'dayjs';
-import {nanoid} from 'nanoid';
 
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -7,8 +6,6 @@ const getRandomInteger = (a = 0, b = 1) => {
 
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
-
-const createDataIds = (size) => Array.from({length: size}, (item, index) => index + 1);
 
 const getRandomArrayElement = (array) => {
   const randomIndex = getRandomInteger(0, array.length - 1);
@@ -61,31 +58,26 @@ const getWeightForNull = (A, B) => {
   }
 };
 
-const sortMovieByDate = (filmB, filmA) => {
-  const weight = getWeightForNull(filmA.filmInfo.release.date, filmB.filmInfo.release.date);
-  return weight ?? dayjs(filmA.filmInfo.release.date).diff(dayjs(filmB.filmInfo.release.date));
+const sortMovieByDate = (movieA, movieB) => {
+  const weight = getWeightForNull(movieA.filmInfo.release.date, movieB.filmInfo.release.date);
+  return weight ?? dayjs(movieB.filmInfo.release.date).diff(dayjs(movieA.filmInfo.release.date));
 };
 
-const sortMovieByRating = (filmA, filmB) => {
-  const weight = getWeightForNull(filmA.filmInfo.totalRating, filmB.filmInfo.totalRating);
-  return weight ?? filmB.filmInfo.totalRating - filmA.filmInfo.totalRating;
+const sortMovieByRating = (movieA, movieB) => {
+  const weight = getWeightForNull(movieA.filmInfo.totalRating, movieB.filmInfo.totalRating);
+  return weight ?? movieB.filmInfo.totalRating - movieA.filmInfo.totalRating;
 };
 
-const addComponentId = (films) => films
-  .map((film) => ({
-    ...film,
-    componentId: `${nanoid()}-${film.id}`,
-  }));
+const getCheckedAttribute = (flag) => flag ? 'checked' : '';
 
 export {
   sortMovieByDate,
   sortMovieByRating,
-  addComponentId,
   getRandomInteger,
-  createDataIds,
   getRandomArrayElement,
   generateDate,
   getHumanDate,
   getTimeFromMins,
-  getDateForComment
+  getDateForComment,
+  getCheckedAttribute
 };
