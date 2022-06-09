@@ -13,7 +13,9 @@ import ProfileView from '../view/header-profile-view';
 import ShowMoreButtonView from '../view/show-more-button-view';
 
 const ALL_MOVIE_COUNT_PER_STEP = 5;
+
 export const SECTION_EXTRA_TYPE = 'extra';
+
 export const SectionSettings = {
   ALL: {
     TITLE: 'All movies. Upcoming',
