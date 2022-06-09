@@ -17,6 +17,7 @@ export default class MoviePresenter {
   #changeData = null;
   #changeMode = null;
   #mode = Mode.DEFAULT;
+  #scrollTopDetails = null;
 
   constructor(movieCountainerElement, pageBodyElement, movieModel, changeData, changeMode) {
     this.#movieCountainerElement = movieCountainerElement;
@@ -45,14 +46,16 @@ export default class MoviePresenter {
     this.#movieDetailsComponent.setWatchedClickHandler(this.#handleWatchedClick);
     this.#movieDetailsComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
 
-    if (prevMovieCardComponent === null) {
+    if (prevMovieCardComponent === null && prevMovieDetailsComponent === null) {
       return render(this.#movieCardComponent, this.#movieCountainerElement);
     }
 
     replace(this.#movieCardComponent, prevMovieCardComponent);
     remove(prevMovieCardComponent);
     if (this.#mode === Mode.OPENED) {
+      this.#scrollTopDetails = prevMovieDetailsComponent.element.scrollTop;
       replace(this.#movieDetailsComponent, prevMovieDetailsComponent);
+      this.#movieDetailsComponent.element.scrollTop = this.#scrollTopDetails;
       remove(prevMovieDetailsComponent);
     }
   }
@@ -60,6 +63,10 @@ export default class MoviePresenter {
   destroy = () => {
     remove(this.#movieCardComponent);
     remove(this.#movieDetailsComponent);
+  };
+
+  partialDestroy = () => {
+    remove(this.#movieCardComponent);
   };
 
   #openMovieDetails = () => {
