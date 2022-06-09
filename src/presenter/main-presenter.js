@@ -145,9 +145,10 @@ export default class MainPresenter {
     render(new MovieFilterView(this.#movieModel.movies), this.#mainContainer);
   }
 
-  #changeData = (updatedMovie) => {
-    this.#moviePresenter.get(updatedMovie.id)
-      .forEach((presenter) => presenter.init(updatedMovie));
+  #changeData = () => {
+    this.#moviePresenter
+      .forEach((value) => value
+        .forEach((presenter) => presenter.resetView()));
   };
 
   #sortMovies = (sortType) => {
