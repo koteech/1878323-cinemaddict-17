@@ -1,4 +1,4 @@
-import Observable from '../framework/observable.js';
+import Observable from '../framework/observable';
 
 const TOP_RATED_MOVIE_COUNT_PER_STEP = 2;
 const MOST_COMMENTED_MOVIE_COUNT_PER_STEP = 2;
@@ -16,7 +16,7 @@ export default class MovieModel extends Observable {
     this.#movies = movies;
   }
 
-  get topRatedMovies () {
+  get topRatedMovies() {
     if (!this.#topRatedMovies) {
       this.#topRatedMovies = [...this.movies]
         .sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating)
@@ -26,7 +26,7 @@ export default class MovieModel extends Observable {
     return this.#topRatedMovies;
   }
 
-  get mostCommentedMovies () {
+  get mostCommentedMovies() {
     if (!this.#mostCommentedMovies) {
       this.#mostCommentedMovies = [...this.movies]
         .sort((a, b) => b.comments.length - a.comments.length)

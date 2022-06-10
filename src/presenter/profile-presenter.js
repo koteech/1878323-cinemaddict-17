@@ -21,6 +21,10 @@ export default class ProfilePresenter extends AbstractView {
     this.#movieModel = movieModel;
   }
 
+  get template() {
+    return '';
+  }
+
   init = () => {
     this.#moviesWatchedCount = this.#getWatchedMoviesCount(this.#movieModel.movies);
     this.#profileName = this.#getProfileName(this.#moviesWatchedCount)[0];
@@ -47,8 +51,4 @@ export default class ProfilePresenter extends AbstractView {
   #handleModelEvent = () => {
     this.init();
   };
-
-  get template() {
-    return '';
-  }
 }

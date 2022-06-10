@@ -1,15 +1,15 @@
-import MoviePresenter from './movie-presenter.js';
-import MovieSectionView from '../view/movie-section-view.js';
-import MovieListView from '../view/movie-list-view.js';
-import {filter} from '../utils/filter.js';
-import SortView from '../view/movie-sort-view.js';
-import FooterStatisticsView from '../view/footer-statistics-view.js';
-import MovieNoDataView from '../view/movie-no-data-view.js';
-import MovieListContainerView from '../view/movie-container-view.js';
-import LoadMoreButtonView from '../view/show-more-button-view.js';
-import {SectionSettings, SortType, UpdateType, UserAction} from '../utils/const.js';
-import {remove, render} from '../framework/render.js';
-import {sortMovieByDate, sortMovieByRating} from '../utils/movies.js';
+import MoviePresenter from './movie-presenter';
+import MovieSectionView from '../view/movie-section-view';
+import MovieListView from '../view/movie-list-view';
+import {filter} from '../utils/filter';
+import SortView from '../view/movie-sort-view';
+import FooterStatisticsView from '../view/footer-statistics-view';
+import MovieNoDataView from '../view/movie-no-data-view';
+import MovieListContainerView from '../view/movie-container-view';
+import LoadMoreButtonView from '../view/show-more-button-view';
+import {SectionSettings, SortType, UpdateType, UserAction} from '../utils/const';
+import {remove, render} from '../framework/render';
+import {sortMovieByDate, sortMovieByRating} from '../utils/movies';
 
 const ALL_MOVIE_COUNT_PER_STEP = 5;
 
@@ -48,6 +48,21 @@ export default class MainPresenter {
     this.#filterModel = filterModel;
     this.#movieModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
+  }
+
+  get movies() {
+    const filterType = this.#filterModel.filter;
+    const movies = this.#movieModel.movies;
+    const filteredMovies = filter[filterType](movies);
+
+    switch (this.#currentSortType) {
+      case SortType.BY_DATE:
+        return [...filteredMovies].sort(sortMovieByDate);
+      case SortType.BY_RATING:
+        return [...filteredMovies].sort(sortMovieByRating);
+    }
+
+    return filteredMovies;
   }
 
   init = () => {
@@ -90,21 +105,6 @@ export default class MainPresenter {
       window.scrollTo(0, this.#pagePosition);
     }
   };
-
-  get movies() {
-    const filterType = this.#filterModel.filter;
-    const movies = this.#movieModel.movies;
-    const filteredMovies = filter[filterType](movies);
-
-    switch (this.#currentSortType) {
-      case SortType.BY_DATE:
-        return [...filteredMovies].sort(sortMovieByDate);
-      case SortType.BY_RATING:
-        return [...filteredMovies].sort(sortMovieByRating);
-    }
-
-    return filteredMovies;
-  }
 
   #renderMovie(movie, container) {
     const moviePresenter = new MoviePresenter(container, this.#pageBodyElement, this.#movieModel, this.#commentModel, this.#handleViewAction, this.#handleModeChange);
