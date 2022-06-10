@@ -1,53 +1,56 @@
-import {generateMovies} from '../mock/movie';
-import {generateComments} from '../mock/comments';
+import Observable from '../framework/observable.js';
 
-const MOVIES_COUNT = 12;
-const TOTAL_COMMENTS_COUNT = 400;
-const TOP_RATED_FILM_COUNT_PER_STEP = 2;
-const MOST_COMMENTED_FILM_COUNT_PER_STEP = 2;
+const TOP_RATED_MOVIE_COUNT_PER_STEP = 2;
+const MOST_COMMENTED_MOVIE_COUNT_PER_STEP = 2;
 
-export default class MovieModel {
-  #comments = null;
+export default class MovieModel extends Observable {
   #movies = null;
   #topRatedMovies = null;
   #mostCommentedMovies = null;
 
-  get comments() {
-    if (!this.#comments) {
-      this.#comments = generateComments(TOTAL_COMMENTS_COUNT);
-    }
-    return this.#comments;
-  }
-
   get movies() {
-    if (!this.#movies) {
-      this.#movies = generateMovies(MOVIES_COUNT, this.comments);
-    }
     return this.#movies;
   }
 
-  get topRatedMovies() {
+  set movies(movies) {
+    this.#movies = movies;
+  }
+
+  get topRatedMovies () {
     if (!this.#topRatedMovies) {
-      this.#topRatedMovies = this.movies
+      this.#topRatedMovies = [...this.movies]
         .sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating)
-        .slice(0, Math.min(this.movies.length, TOP_RATED_FILM_COUNT_PER_STEP));
+        .slice(0, Math.min(this.movies.length, TOP_RATED_MOVIE_COUNT_PER_STEP));
     }
 
     return this.#topRatedMovies;
   }
 
-  get mostCommentedMovies() {
+  get mostCommentedMovies () {
     if (!this.#mostCommentedMovies) {
-      this.#mostCommentedMovies = this.movies
+      this.#mostCommentedMovies = [...this.movies]
         .sort((a, b) => b.comments.length - a.comments.length)
-        .slice(0, Math.min(this.movies.length, MOST_COMMENTED_FILM_COUNT_PER_STEP));
+        .slice(0, Math.min(this.movies.length, MOST_COMMENTED_MOVIE_COUNT_PER_STEP));
     }
 
     return this.#mostCommentedMovies;
   }
 
-  getCommentsByMovie(movieId) {
-    const selectedMovie = this.movies.find((film) => film.id === movieId);
-    return this.comments.filter((comment) => selectedMovie.comments.includes(comment.id));
-  }
+  updateMovie = (updateType, update) => {
+    const index = this.#movies.findIndex((movie) => movie.id === update.id);
+    if (index === -1) {
+      throw new Error('Can\'t update unexisting task');
+    }
+
+    this.#movies = [
+      ...this.#movies.slice(0, index),
+      update,
+      ...this.#movies.slice(index + 1),
+    ];
+
+    this.#mostCommentedMovies = null;
+    this.#topRatedMovies = null;
+
+    this._notify(updateType, update);
+  };
 }

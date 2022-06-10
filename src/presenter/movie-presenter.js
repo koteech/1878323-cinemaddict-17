@@ -1,6 +1,7 @@
 import {remove, render, replace} from '../framework/render';
 import MovieCardView from '../view/movie-card-view';
 import MovieDetailsView from '../view/movie-details-view';
+import {UpdateType, UserAction} from '../utils/const';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -14,22 +15,24 @@ export default class MoviePresenter {
   #movieDetailsComponent = null;
   #pageBodyElement = null;
   #movieModel = null;
+  #commentModel = null;
   #changeData = null;
   #changeMode = null;
   #mode = Mode.DEFAULT;
   #scrollTopDetails = null;
 
-  constructor(movieCountainerElement, pageBodyElement, movieModel, changeData, changeMode) {
+  constructor(movieCountainerElement, pageBodyElement, movieModel, commentModel, changeData, changeMode) {
     this.#movieCountainerElement = movieCountainerElement;
     this.#pageBodyElement = pageBodyElement;
     this.#movieModel = movieModel;
+    this.#commentModel = commentModel;
     this.#changeData = changeData;
     this.#changeMode = changeMode;
   }
 
   init(movie) {
     this.movie = movie;
-    this.#comments = this.#movieModel.getCommentsByMovie(movie.id);
+    this.#comments = this.#getCommentsByMovie();
 
     const prevMovieCardComponent = this.#movieCardComponent;
     const prevMovieDetailsComponent = this.#movieDetailsComponent;
@@ -45,6 +48,8 @@ export default class MoviePresenter {
     this.#movieDetailsComponent.setWatchListClickHandler(this.#handleWatchListClick);
     this.#movieDetailsComponent.setWatchedClickHandler(this.#handleWatchedClick);
     this.#movieDetailsComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+    this.#movieDetailsComponent.setCommentDeleteClickHandler(this.#handleCommentDeleteClick);
+    this.#movieDetailsComponent.setCommentAddHandler(this.#handleCommentAdd);
 
     if (prevMovieCardComponent === null && prevMovieDetailsComponent === null) {
       return render(this.#movieCardComponent, this.#movieCountainerElement);
@@ -52,6 +57,7 @@ export default class MoviePresenter {
 
     replace(this.#movieCardComponent, prevMovieCardComponent);
     remove(prevMovieCardComponent);
+
     if (this.#mode === Mode.OPENED) {
       this.#scrollTopDetails = prevMovieDetailsComponent.element.scrollTop;
       replace(this.#movieDetailsComponent, prevMovieDetailsComponent);
@@ -94,33 +100,74 @@ export default class MoviePresenter {
   };
 
   #handleWatchListClick = () => {
-    this.#changeData({
-      ...this.movie,
-      userDetails: {
-        ...this.movie.userDetails,
-        watchlist: !this.movie.userDetails.watchlist,
-      }
-    });
+    this.#changeData(
+      UserAction.UPDATE_MOVIE,
+      UpdateType.MINOR,
+      {
+        ...this.movie,
+        userDetails: {
+          ...this.movie.userDetails,
+          watchlist: !this.movie.userDetails.watchlist,
+        }
+      });
   };
 
   #handleWatchedClick = () => {
-    this.#changeData({
-      ...this.movie,
-      userDetails: {
-        ...this.movie.userDetails,
-        alreadyWatched: !this.movie.userDetails.alreadyWatched,
-      }
-    });
+    this.#changeData(
+      UserAction.UPDATE_MOVIE,
+      UpdateType.MINOR,
+      {
+        ...this.movie,
+        userDetails: {
+          ...this.movie.userDetails,
+          alreadyWatched: !this.movie.userDetails.alreadyWatched,
+        }
+      });
   };
 
   #handleFavoriteClick = () => {
-    this.#changeData({
-      ...this.movie,
-      userDetails: {
-        ...this.movie.userDetails,
-        favorite: !this.movie.userDetails.favorite,
+    this.#changeData(
+      UserAction.UPDATE_MOVIE,
+      UpdateType.MINOR,
+      {
+        ...this.movie,
+        userDetails: {
+          ...this.movie.userDetails,
+          favorite: !this.movie.userDetails.favorite,
+        }
+      });
+  };
+
+  #handleCommentDeleteClick = (commentId) => {
+    this.#commentModel.deleteComment(
+      UpdateType.MINOR,
+      commentId
+    );
+
+    this.#changeData(
+      UserAction.DELETE_COMMENT,
+      UpdateType.MINOR,
+      {
+        ...this.movie,
+        comments: this.movie.comments.filter((movieCommentId) => movieCommentId !== commentId),
       }
-    });
+    );
+  };
+
+  #handleCommentAdd = (update) => {
+    this.#commentModel.addComment(
+      UpdateType.MINOR,
+      update
+    );
+
+    this.#changeData(
+      UserAction.ADD_COMMENT,
+      UpdateType.MINOR,
+      {
+        ...this.movie,
+        comments: [...this.movie.comments, update.id],
+      }
+    );
   };
 
   resetView = () => {
@@ -128,5 +175,10 @@ export default class MoviePresenter {
       this.#closeMovieDetails();
     }
   };
-}
 
+  #getCommentsByMovie() {
+    return this.#commentModel.comments.filter((comment) => this.movie.comments.includes(comment.id));
+  }
+
+  isOpen = () => this.#mode === Mode.OPENED;
+}
