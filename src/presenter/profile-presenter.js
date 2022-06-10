@@ -1,4 +1,3 @@
-import AbstractView from '../framework/view/abstract-view';
 import ProfileView from '../view/header-profile-view';
 import {remove, render, replace} from '../framework/render';
 
@@ -8,7 +7,7 @@ const profileMap = {
   'Movie Buff': [21, Infinity]
 };
 
-export default class ProfilePresenter extends AbstractView {
+export default class ProfilePresenter {
   #moviesWatchedCount = null;
   #profileName = null;
   #movieModel = null;
@@ -16,13 +15,8 @@ export default class ProfilePresenter extends AbstractView {
   #profileContainer = null;
 
   constructor(profileContainer, movieModel) {
-    super();
     this.#profileContainer = profileContainer;
     this.#movieModel = movieModel;
-  }
-
-  get template() {
-    return '';
   }
 
   init = () => {

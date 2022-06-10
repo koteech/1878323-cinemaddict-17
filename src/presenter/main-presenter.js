@@ -80,12 +80,11 @@ export default class MainPresenter {
     render(this.#allMovieListComponent, this.#movieSectionComponent.element);
 
     if (movieCount === 0) {
-      this.#renderNoTasks();
+      this.#renderNoMovies();
       remove(this.#sortComponent);
       this.#allMovieListComponent.element.firstElementChild.remove();
       return;
     }
-
 
     render(this.#mostCommentedMovieListComponent, this.#movieSectionComponent.element);
     render(this.#topRatedMovieListComponent, this.#movieSectionComponent.element);
@@ -142,7 +141,7 @@ export default class MainPresenter {
     this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
   }
 
-  #renderNoTasks = () => {
+  #renderNoMovies = () => {
     this.#noMovieComponent = new MovieNoDataView(this.#filterModel.filter);
     render(this.#noMovieComponent, this.#allMovieListComponent.element);
   };
@@ -163,7 +162,7 @@ export default class MainPresenter {
     }
 
     this.#currentSortType = sortType;
-    this.#clearBoard({resetRenderedAllMovies: true});
+    this.#clearPage({resetRenderedAllMovies: true});
     this.#renderPage();
   };
 
@@ -184,11 +183,11 @@ export default class MainPresenter {
           .forEach((presenter) => presenter.init(data));
         break;
       case UpdateType.MINOR:
-        this.#clearBoard();
+        this.#clearPage();
         this.#renderPage();
         break;
       case UpdateType.MAJOR:
-        this.#clearBoard({resetRenderedAllMovies: true, resetSortType: true});
+        this.#clearPage({resetRenderedAllMovies: true, resetSortType: true});
         this.#renderPage();
         break;
     }
@@ -200,7 +199,7 @@ export default class MainPresenter {
         .forEach((presenter) => presenter.resetView()));
   };
 
-  #clearBoard = ({resetRenderedAllMovies = false, resetSortType = false} = {}) => {
+  #clearPage = ({resetRenderedAllMovies = false, resetSortType = false} = {}) => {
     const movieCount = this.movies.length;
 
     this.#pagePosition = document.documentElement.scrollTop;
@@ -235,11 +234,7 @@ export default class MainPresenter {
     }
     this.#prevAllMoviesCount = this.#renderedAllMovies;
 
-    if (resetRenderedAllMovies) {
-      this.#renderedAllMovies = ALL_MOVIE_COUNT_PER_STEP;
-    } else {
-      this.#renderedAllMovies = Math.min(movieCount, this.#renderedAllMovies);
-    }
+    resetRenderedAllMovies ? this.#renderedAllMovies = ALL_MOVIE_COUNT_PER_STEP : this.#renderedAllMovies = Math.min(movieCount, this.#renderedAllMovies);
 
     if (resetSortType) {
       this.#currentSortType = SortType.DEFAULT;
@@ -248,7 +243,7 @@ export default class MainPresenter {
 
   #updateOpenMoviePresenter = () => {
     if (!this.#openMoviePresenter) {
-      return true;
+      return;
     }
 
     if (!this.#openMoviePresenter.isOpen) {
