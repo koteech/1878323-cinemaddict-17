@@ -33,8 +33,4 @@ export default class StatisticPresenter extends AbstractView {
   #handleModelEvent = () => {
     this.init();
   };
-
-  get template() {
-    return '';
-  }
 }
