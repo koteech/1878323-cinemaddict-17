@@ -1,16 +1,15 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import MovieDetailsCommentView from './movie-comment-view';
-import {generateDate, getHumanDate, getTimeFromMins} from '../utils/movies';
-import {nanoid} from 'nanoid';
+import {getHumanDate, getTimeFromMins} from '../utils/movies';
 
 const createMovieDetailsTemplate = (state, movieComments) => {
-  const commentsTemplate = movieComments.map((comment) => new MovieDetailsCommentView(comment).template).join('');
+  const commentsTemplate = movieComments.map((comment) => new MovieDetailsCommentView(comment, state.isCommentDeleting).template).join('');
+
   const commentEmojiTemplate = state.commentEmoji ?
-    `<img src="images/emoji/${state.commentEmoji}.png" width="55" height="55" alt="emoji-${state.commentEmoji}}"></img>`
+    `<img src="images/emoji/${state.commentEmoji}.png" width="55" height="55" alt="emoji-${state.commentEmoji}}">`
     : '';
 
-  return `<section class="film-details">
-  <form class="film-details__inner" action="" method="get">
+  return `<form class="film-details__inner" action="" method="get">
     <div class="film-details__top-container">
       <div class="film-details__close">
         <button class="film-details__close-btn" type="button">close</button>
@@ -82,22 +81,22 @@ const createMovieDetailsTemplate = (state, movieComments) => {
         <div class="film-details__new-comment">
           <div class="film-details__add-emoji-label">${commentEmojiTemplate}</div>
           <label class="film-details__comment-label">
-            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${state.commentText ? state.commentText : ''}</textarea>
+            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${state.isCommentAdding ? ' disabled' : ''}>${state.commentText ? state.commentText : ''}</textarea>
           </label>
           <div class="film-details__emoji-list">
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile" ${state.isCommentAdding ? ' disabled' : ''}>
             <label class="film-details__emoji-label" for="emoji-smile">
               <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
             </label>
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping" ${state.isCommentAdding ? ' disabled' : ''}>
             <label class="film-details__emoji-label" for="emoji-sleeping">
               <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
             </label>
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke" ${state.isCommentAdding ? ' disabled' : ''}>
             <label class="film-details__emoji-label" for="emoji-puke">
               <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
             </label>
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry" ${state.isCommentAdding ? ' disabled' : ''}>
             <label class="film-details__emoji-label" for="emoji-angry">
               <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
             </label>
@@ -105,14 +104,13 @@ const createMovieDetailsTemplate = (state, movieComments) => {
         </div>
       </section>
     </div>
-  </form>
-  </section>`;
+  </form>`;
 
 };
 
 
 export default class MovieDetailsView extends AbstractStatefulView {
-  #movieComments = null;
+  #movieComments = [];
 
   constructor(movie, comments) {
     super();
@@ -129,7 +127,9 @@ export default class MovieDetailsView extends AbstractStatefulView {
     ...movie,
     commentEmoji: null,
     commentText: null,
-    scrollTop: null
+    scrollTop: null,
+    isCommentDeleting: false,
+    isCommentAdding: false
   });
 
   _restoreHandlers = () => {
@@ -137,9 +137,8 @@ export default class MovieDetailsView extends AbstractStatefulView {
     this.#setOuterHandlers();
   };
 
-  #restorePosition = () => {
+  restorePosition = () => {
     this.element.scrollTop = this._state.scrollTop;
-    this.element.querySelector('.film-details__comment-input').scrollTop = this._state.localCommentScrollTop;
   };
 
   #localCommentEmojiClickHandler = (evt) => {
@@ -153,7 +152,7 @@ export default class MovieDetailsView extends AbstractStatefulView {
         elem.checked = false;
       });
     this.element.querySelector(`#${evt.target.id}`).checked = true;
-    this.#restorePosition();
+    this.restorePosition();
   };
 
   #localCommentInputHandler = (evt) => {
@@ -162,7 +161,7 @@ export default class MovieDetailsView extends AbstractStatefulView {
       commentText: evt.target.value,
       scrollTop: this.element.scrollTop,
     });
-    this.#restorePosition();
+    this.restorePosition();
   };
 
   #setInnerHandlers = () => {
@@ -229,6 +228,12 @@ export default class MovieDetailsView extends AbstractStatefulView {
 
   #commentDeleteClickHandler = (evt) => {
     evt.preventDefault();
+    const commentId = evt.target.closest('.film-details__comment').id;
+    this.updateElement({
+      scrollTop: this.element.scrollTop,
+      isCommentDeleting: true,
+    });
+    this.element.querySelector(`.film-details__comment[id="${commentId}"]`).querySelector('.film-details__comment-delete').textContent = 'Deleting...';
     this._callback.commentDeleteClick(evt.target.closest('.film-details__comment').id);
   };
 
@@ -239,22 +244,20 @@ export default class MovieDetailsView extends AbstractStatefulView {
 
   #commentAddHandler = (evt) => {
     if ((evt.ctrlKey || evt.metaKey) && evt.keyCode === 13 && this._state.commentEmoji) {
+      this.updateElement({
+        scrollTop: this.element.scrollTop,
+        isCommentAdding: true,
+      });
       this._callback.commentAdd({
-        id: nanoid(),
-        author: 'Marry Jain',
         comment: this._state.commentText,
-        date: generateDate(),
-        emotion: this._state.commentEmoji,
+        emotion: this._state.commentEmoji
       });
     }
   };
-
 
   reset = (movie) => {
     this.updateElement(
       this.#convertMovieToState(movie)
     );
   };
-
-  #getCommentTextElement = () => this.element.querySelector('.film-details__comment-input');
 }

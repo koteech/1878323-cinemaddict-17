@@ -35,6 +35,6 @@ export default class MovieFilterView extends AbstractView {
 
   #FilterTypeChangeHandler = (evt) => {
     evt.preventDefault();
-    this._callback.filterTypeChange(evt.target.id);
+    this._callback.filterTypeChange(evt.currentTarget.id);
   };
 }

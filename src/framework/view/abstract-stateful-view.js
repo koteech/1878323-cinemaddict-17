@@ -49,4 +49,20 @@ export default class AbstractStatefulView extends AbstractView {
 
     this._restoreHandlers();
   };
+
+  rerenderElement = () => {
+    const prevElement = this.element;
+    const parent = prevElement.parentElement;
+    this.removeElement();
+
+    const newElement = this.element;
+
+    parent.replaceChild(newElement, prevElement);
+
+    this._restoreHandlers();
+  };
+
+  get template() {
+    return '';
+  }
 }
