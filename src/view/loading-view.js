@@ -1,4 +1,4 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractView from '../framework/view/abstract-view';
 
 const createLoadingTemplate = () => '<h2 class="films-list__title">Loading...</h2>';
 

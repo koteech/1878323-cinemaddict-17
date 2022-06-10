@@ -5,7 +5,7 @@ import StatisticPresenter from './presenter/statistic-presenter';
 import FilterPresenter from './presenter/filter-presenter';
 import ProfilePresenter from './presenter/profile-presenter';
 import MainPresenter from './presenter/main-presenter';
-import Api from './utils/api.js';
+import Api from './utils/api';
 
 const END_POINT = 'https://17.ecmascript.pages.academy/cinemaddict';
 const AUTHORIZATION = 'Basic koteech1';

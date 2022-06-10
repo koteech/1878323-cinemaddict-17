@@ -4,9 +4,9 @@ import {FilterType} from '../utils/const';
 const createFilterItemTemplate = (filter, currentFilter) => `
   <a id="${filter.type}" href="#${filter.name}" class="main-navigation__item${filter.type === currentFilter ? ' main-navigation__item--active' : ''}">
   ${filter.type !== FilterType.ALL ?
-    `${filter.name.charAt(0).toUpperCase() + filter.name.slice(1)}
+  `${filter.name.charAt(0).toUpperCase() + filter.name.slice(1)}
     <span class="main-navigation__item-count">${filter.count}</span>`
-    : 'All movies'}
+  : 'All movies'}
   </a>`;
 
 const createFilterTemplate = (filters, currentFilter) => `<nav class="main-navigation">

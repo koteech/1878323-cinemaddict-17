@@ -2,7 +2,7 @@ import {remove, render, replace} from '../framework/render';
 import MovieCardView from '../view/movie-card-view';
 import MovieDetailsView from '../view/movie-details-view';
 import {UpdateType, UserAction} from '../utils/const';
-import MovieDetailsContainerView from '../view/movie-details-container-view.js';
+import MovieDetailsContainerView from '../view/movie-details-container-view';
 
 const Mode = {
   DEFAULT: 'DEFAULT',

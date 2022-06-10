@@ -6,7 +6,7 @@ import SortView from '../view/movie-sort-view';
 import MovieNoDataView from '../view/movie-no-data-view';
 import MovieListContainerView from '../view/movie-container-view';
 import LoadMoreButtonView from '../view/show-more-button-view';
-import LoadingView from '../view/loading-view.js';
+import LoadingView from '../view/loading-view';
 import {SectionSettings, SortType, UpdateType, UserAction} from '../utils/const';
 import {remove, render} from '../framework/render';
 import {sortMovieByDate, sortMovieByRating} from '../utils/movies';
@@ -250,7 +250,7 @@ export default class MainPresenter {
 
     this.#prevAllMoviesCount = this.#renderedAllMovies;
 
-    this.#renderedAllMovies = resetRenderedAllMovies ?  ALL_MOVIE_COUNT_PER_STEP : Math.min(movieCount, this.#renderedAllMovies);
+    this.#renderedAllMovies = resetRenderedAllMovies ? ALL_MOVIE_COUNT_PER_STEP : Math.min(movieCount, this.#renderedAllMovies);
 
     if (resetSortType) {
       this.#currentSortType = SortType.DEFAULT;

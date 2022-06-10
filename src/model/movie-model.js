@@ -1,5 +1,5 @@
 import Observable from '../framework/observable';
-import { UpdateType } from '../utils/const.js';
+import {UpdateType} from '../utils/const';
 
 const TOP_RATED_MOVIE_COUNT_PER_STEP = 2;
 const MOST_COMMENTED_MOVIE_COUNT_PER_STEP = 2;
@@ -10,7 +10,7 @@ export default class MovieModel extends Observable {
   #mostCommentedMovies = null;
   #api = null;
 
-  constructor (api) {
+  constructor(api) {
     super();
     this.#api = api;
   }
@@ -19,7 +19,7 @@ export default class MovieModel extends Observable {
     try {
       const movies = await this.#api.movies;
       this.#movies = movies.map(this.#adaptMovieToClient);
-    } catch(err) {
+    } catch (err) {
       this.#movies = [];
     }
 
@@ -30,7 +30,7 @@ export default class MovieModel extends Observable {
     return this.#movies;
   }
 
-  get topRatedMovies () {
+  get topRatedMovies() {
     if (!this.#topRatedMovies) {
       this.#topRatedMovies = [...this.movies]
         .sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating)
@@ -40,7 +40,7 @@ export default class MovieModel extends Observable {
     return this.#topRatedMovies;
   }
 
-  get mostCommentedMovies () {
+  get mostCommentedMovies() {
     if (!this.#mostCommentedMovies) {
       this.#mostCommentedMovies = [...this.movies]
         .sort((a, b) => b.comments.length - a.comments.length)
@@ -97,7 +97,8 @@ export default class MovieModel extends Observable {
     const adaptedMovie = {
       id: movie.id,
       comments: movie.comments,
-      filmInfo: {...movie.film_info,
+      filmInfo: {
+        ...movie.film_info,
         ageRating: movie.film_info.age_rating,
         alternativeTitle: movie.film_info.alternative_title,
         totalRating: movie.film_info.total_rating,
@@ -106,7 +107,8 @@ export default class MovieModel extends Observable {
           releaseCountry: movie.film_info.release.release_country
         }
       },
-      userDetails: {...movie.user_details,
+      userDetails: {
+        ...movie.user_details,
         alreadyWatched: movie.user_details.already_watched,
         watchingDate: movie.user_details.watching_date !== null ? new Date(movie.user_details.watching_date) : movie.user_details.watching_date
       }

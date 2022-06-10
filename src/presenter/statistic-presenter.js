@@ -1,6 +1,6 @@
-import AbstractView from '../framework/view/abstract-view.js';
-import FooterStatisticsView from '../view/footer-statistics-view.js';
-import {remove, render, replace} from '../framework/render.js';
+import AbstractView from '../framework/view/abstract-view';
+import FooterStatisticsView from '../view/footer-statistics-view';
+import {remove, render, replace} from '../framework/render';
 
 export default class StatisticPresenter extends AbstractView {
   #movieModel = null;
