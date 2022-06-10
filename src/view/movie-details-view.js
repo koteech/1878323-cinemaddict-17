@@ -1,11 +1,12 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import MovieDetailsCommentView from './movie-comment-view';
-import {getHumanDate, getTimeFromMins} from '../utils/movies';
+import {generateDate, getHumanDate, getTimeFromMins} from '../utils/movies';
+import {nanoid} from 'nanoid';
 
-const createMovieDetailsTemplate = (movie, movieComments) => {
+const createMovieDetailsTemplate = (state, movieComments) => {
   const commentsTemplate = movieComments.map((comment) => new MovieDetailsCommentView(comment).template).join('');
-  const commentEmojiTemplate = movie.commentEmoji ?
-    `<img src="images/emoji/${movie.commentEmoji}.png" width="55" height="55" alt="emoji-${movie.commentEmoji}}"></img>`
+  const commentEmojiTemplate = state.commentEmoji ?
+    `<img src="images/emoji/${state.commentEmoji}.png" width="55" height="55" alt="emoji-${state.commentEmoji}}"></img>`
     : '';
 
   return `<section class="film-details">
@@ -16,60 +17,60 @@ const createMovieDetailsTemplate = (movie, movieComments) => {
       </div>
       <div class="film-details__info-wrap">
         <div class="film-details__poster">
-          <img class="film-details__poster-img" src="./${movie.filmInfo.poster}" alt="">
-          <p class="film-details__age">${movie.filmInfo.ageRating}+</p>
+          <img class="film-details__poster-img" src="./${state.filmInfo.poster}" alt="">
+          <p class="film-details__age">${state.filmInfo.ageRating}+</p>
         </div>
         <div class="film-details__info">
           <div class="film-details__info-head">
             <div class="film-details__title-wrap">
-              <h3 class="film-details__title">${movie.filmInfo.title}</h3>
-              <p class="film-details__title-original">${movie.filmInfo.alternativeTitle}</p>
+              <h3 class="film-details__title">${state.filmInfo.title}</h3>
+              <p class="film-details__title-original">${state.filmInfo.alternativeTitle}</p>
             </div>
             <div class="film-details__rating">
-              <p class="film-details__total-rating">${movie.filmInfo.totalRating}</p>
+              <p class="film-details__total-rating">${state.filmInfo.totalRating}</p>
             </div>
           </div>
           <table class="film-details__table">
             <tbody><tr class="film-details__row">
               <td class="film-details__term">Director</td>
-              <td class="film-details__cell">${movie.filmInfo.director}</td>
+              <td class="film-details__cell">${state.filmInfo.director}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Writers</td>
-              <td class="film-details__cell">${movie.filmInfo.writers.join(', ')}</td>
+              <td class="film-details__cell">${state.filmInfo.writers.join(', ')}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Actors</td>
-              <td class="film-details__cell">${movie.filmInfo.actors.join(', ')}</td>
+              <td class="film-details__cell">${state.filmInfo.actors.join(', ')}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">${getHumanDate(movie.filmInfo.release.date)}</td>
+              <td class="film-details__cell">${getHumanDate(state.filmInfo.release.date)}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
-              <td class="film-details__cell">${getTimeFromMins(movie.filmInfo.runtime)}</td>
+              <td class="film-details__cell">${getTimeFromMins(state.filmInfo.runtime)}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Country</td>
-              <td class="film-details__cell">${movie.filmInfo.release.releaseCountry}</td>
+              <td class="film-details__cell">${state.filmInfo.release.releaseCountry}</td>
             </tr>
             <tr class="film-details__row">
-              <td class="film-details__term">${movie.filmInfo.genre.length > 1 ? 'Genres' : 'Genre'}</td>
+              <td class="film-details__term">${state.filmInfo.genre.length > 1 ? 'Genres' : 'Genre'}</td>
               <td class="film-details__cell">
-                ${movie.filmInfo.genre.map((item) => `<span class="film-details__genre">${item}</span>`).join(' ')}
+                ${state.filmInfo.genre.map((item) => `<span class="film-details__genre">${item}</span>`).join(' ')}
                 </td>
             </tr>
           </tbody></table>
           <p class="film-details__film-description">
-            ${movie.filmInfo.description}
+            ${state.filmInfo.description}
           </p>
         </div>
       </div>
       <section class="film-details__controls">
-        <button type="button" class="film-details__control-button film-details__control-button--watchlist ${movie.userDetails.watchlist ? 'film-details__control-button--active' : ''}" id="watchlist" name="watchlist">Add to watchlist</button>
-        <button type="button" class="film-details__control-button film-details__control-button--watched ${movie.userDetails.alreadyWatched ? 'film-details__control-button--active' : ''}" id="watched" name="watched">Already watched</button>
-        <button type="button" class="film-details__control-button film-details__control-button--favorite ${movie.userDetails.favorite ? 'film-details__control-button--active' : ''}" id="favorite" name="favorite">Add to favorites</button>
+        <button type="button" class="film-details__control-button film-details__control-button--watchlist ${state.userDetails.watchlist ? 'film-details__control-button--active' : ''}" id="watchlist" name="watchlist">Add to watchlist</button>
+        <button type="button" class="film-details__control-button film-details__control-button--watched ${state.userDetails.alreadyWatched ? 'film-details__control-button--active' : ''}" id="watched" name="watched">Already watched</button>
+        <button type="button" class="film-details__control-button film-details__control-button--favorite ${state.userDetails.favorite ? 'film-details__control-button--active' : ''}" id="favorite" name="favorite">Add to favorites</button>
       </section>
     </div>
     <div class="film-details__bottom-container">
@@ -81,7 +82,7 @@ const createMovieDetailsTemplate = (movie, movieComments) => {
         <div class="film-details__new-comment">
           <div class="film-details__add-emoji-label">${commentEmojiTemplate}</div>
           <label class="film-details__comment-label">
-            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${movie.commentText ? movie.commentText : ''}</textarea>
+            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${state.commentText ? state.commentText : ''}</textarea>
           </label>
           <div class="film-details__emoji-list">
             <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
@@ -131,16 +132,6 @@ export default class MovieDetailsView extends AbstractStatefulView {
     scrollTop: null
   });
 
-  #convertStateToMovie = (state) => {
-    const movie = {...state};
-
-    delete movie.commentEmoji;
-    delete movie.commentText;
-    delete movie.scrollTop;
-
-    return movie;
-  };
-
   _restoreHandlers = () => {
     this.#setInnerHandlers();
     this.#setOuterHandlers();
@@ -186,6 +177,8 @@ export default class MovieDetailsView extends AbstractStatefulView {
     this.setWatchListClickHandler(this._callback.watchListClick);
     this.setWatchedClickHandler(this._callback.watchedClick);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
+    this.setCommentDeleteClickHandler(this._callback.commentDeleteClick);
+    this.setCommentAddHandler(this._callback.commentAdd);
   };
 
   setCloseButtonClickHandler = (callback) => {
@@ -229,9 +222,39 @@ export default class MovieDetailsView extends AbstractStatefulView {
     this._callback.favoriteClick();
   };
 
+  setCommentDeleteClickHandler = (callback) => {
+    this._callback.commentDeleteClick = callback;
+    this.element.querySelectorAll('.film-details__comment-delete').forEach((element) => element.addEventListener('click', this.#commentDeleteClickHandler));
+  };
+
+  #commentDeleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.commentDeleteClick(evt.target.closest('.film-details__comment').id);
+  };
+
+  setCommentAddHandler = (callback) => {
+    this._callback.commentAdd = callback;
+    this.element.querySelector('.film-details__comment-input').addEventListener('keydown', this.#commentAddHandler);
+  };
+
+  #commentAddHandler = (evt) => {
+    if ((evt.ctrlKey || evt.metaKey) && evt.keyCode === 13 && this._state.commentEmoji) {
+      this._callback.commentAdd({
+        id: nanoid(),
+        author: 'Marry Jain',
+        comment: this._state.commentText,
+        date: generateDate(),
+        emotion: this._state.commentEmoji,
+      });
+    }
+  };
+
+
   reset = (movie) => {
     this.updateElement(
       this.#convertMovieToState(movie)
     );
   };
+
+  #getCommentTextElement = () => this.element.querySelector('.film-details__comment-input');
 }
