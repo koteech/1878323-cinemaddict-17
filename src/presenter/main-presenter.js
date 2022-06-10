@@ -29,7 +29,6 @@ export default class MainPresenter {
   #FooterStatisticsComponent = null;
   #sortComponent = null;
   #noMovieComponent = null;
-  #resetMoviesCount = null;
 
   #movieSectionComponent = new MovieSectionView();
   #allMovieListComponent = new MovieListView(SectionSettings.ALL.TITLE);
@@ -236,7 +235,7 @@ export default class MainPresenter {
 
     this.#prevAllMoviesCount = this.#renderedAllMovies;
 
-    this.#resetMoviesCount = resetRenderedAllMovies !== null ? this.#renderedAllMovies = ALL_MOVIE_COUNT_PER_STEP : this.#renderedAllMovies = Math.min(movieCount, this.#renderedAllMovies);
+    this.#renderedAllMovies = resetRenderedAllMovies ?  ALL_MOVIE_COUNT_PER_STEP : Math.min(movieCount, this.#renderedAllMovies);
 
     if (resetSortType) {
       this.#currentSortType = SortType.DEFAULT;
