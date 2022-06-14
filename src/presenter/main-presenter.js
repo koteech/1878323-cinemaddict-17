@@ -91,11 +91,7 @@ export default class MainPresenter {
       return;
     }
 
-    render(this.#mostCommentedMovieListComponent, this.#movieSectionComponent.element);
-    render(this.#topRatedMovieListComponent, this.#movieSectionComponent.element);
     render(this.#allMovieListContainerComponent, this.#allMovieListComponent.element);
-    render(this.#topRatedMovieListContainerComponent, this.#topRatedMovieListComponent.element);
-    render(this.#mostCommentedMovieListContainerComponent, this.#mostCommentedMovieListComponent.element);
 
     this.#updateOpenMoviePresenter();
     this.#renderMovieCards();
@@ -133,11 +129,25 @@ export default class MainPresenter {
   }
 
   #renderTopRatedMovieCards() {
-    this.#movieModel.topRatedMovies.forEach((movie) => this.#renderMovie(movie, this.#topRatedMovieListContainerComponent.element));
+    const totalMovieRate = this.#movieModel.topRatedMovies
+      .map((movie) => parseFloat(movie.filmInfo.totalRating))
+      .reduce((a, b) => a + b);
+    if (totalMovieRate > 0) {
+      render(this.#topRatedMovieListComponent, this.#movieSectionComponent.element);
+      render(this.#topRatedMovieListContainerComponent, this.#topRatedMovieListComponent.element);
+      this.#movieModel.topRatedMovies.forEach((movie) => this.#renderMovie(movie, this.#topRatedMovieListContainerComponent.element));
+    }
   }
 
   #renderMostCommentedMovieCards() {
-    this.#movieModel.mostCommentedMovies.forEach((movie) => this.#renderMovie(movie, this.#mostCommentedMovieListContainerComponent.element));
+    const commentsCount = this.#movieModel.mostCommentedMovies
+      .map((movie) => movie.comments.length)
+      .reduce((a, b) => a + b);
+    if (commentsCount > 0) {
+      render(this.#mostCommentedMovieListComponent, this.#movieSectionComponent.element);
+      render(this.#mostCommentedMovieListContainerComponent, this.#mostCommentedMovieListComponent.element);
+      this.#movieModel.mostCommentedMovies.forEach((movie) => this.#renderMovie(movie, this.#mostCommentedMovieListContainerComponent.element));
+    }
   }
 
   #renderSortComponent() {

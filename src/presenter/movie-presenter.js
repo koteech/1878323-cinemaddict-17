@@ -51,11 +51,11 @@ export default class MoviePresenter {
       return render(this.#movieCardComponent, this.#movieCountainerElement);
     }
 
-    replace(this.#movieCardComponent, this.#prevMovieCardComponent);
-    remove(this.#prevMovieCardComponent);
-
-    if (this.#mode === Mode.OPENED) {
+    if (this.isOpen()) {
       this.#replaceMovieDetailsComponent(this.#comments);
+    } else {
+      replace(this.#movieCardComponent, this.#prevMovieCardComponent);
+      remove(this.#prevMovieCardComponent);
     }
   }
 
@@ -95,43 +95,57 @@ export default class MoviePresenter {
     }
   };
 
-  #handleWatchListClick = () => {
-    this.#changeData(
-      UserAction.UPDATE_MOVIE,
-      UpdateType.MINOR,
-      {
-        ...this.movie,
-        userDetails: {
-          ...this.movie.userDetails,
-          watchlist: !this.movie.userDetails.watchlist,
+  #handleWatchListClick = async () => {
+    try {
+      await this.#changeData(
+        UserAction.UPDATE_FILM,
+        UpdateType.MINOR,
+        {
+          ...this.movie,
+          userDetails: {
+            ...this.movie.userDetails,
+            watchlist: !this.movie.userDetails.watchlist,
+          }
         }
-      });
+      );
+    } catch {
+      this.#rollBackChanges();
+    }
   };
 
-  #handleWatchedClick = () => {
-    this.#changeData(
-      UserAction.UPDATE_MOVIE,
-      UpdateType.MINOR,
-      {
-        ...this.movie,
-        userDetails: {
-          ...this.movie.userDetails,
-          alreadyWatched: !this.movie.userDetails.alreadyWatched,
+  #handleWatchedClick = async () => {
+    try {
+      await this.#changeData(
+        UserAction.UPDATE_FILM,
+        UpdateType.MINOR,
+        {...this.movie,
+          userDetails: {
+            ...this.movie.userDetails,
+            alreadyWatched: !this.movie.userDetails.alreadyWatched,
+          }
         }
-      });
+      );
+    } catch {
+      this.#rollBackChanges();
+    }
   };
 
-  #handleFavoriteClick = () => {
-    this.#changeData(
-      UserAction.UPDATE_MOVIE,
-      UpdateType.MINOR,
-      {
-        ...this.movie,
-        userDetails: {
-          ...this.movie.userDetails,
-          favorite: !this.movie.userDetails.favorite,
+  #handleFavoriteClick = async() => {
+    try {
+      await this.#changeData(
+        UserAction.UPDATE_FILM,
+        UpdateType.MINOR,
+        {
+          ...this.movie,
+          userDetails: {
+            ...this.movie.userDetails,
+            favorite: !this.movie.userDetails.favorite,
+          }
         }
-      });
+      );
+    } catch {
+      this.#rollBackChanges();
+    }
   };
 
   #handleCommentDeleteClick = async (commentId) => {
