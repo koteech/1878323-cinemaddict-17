@@ -1,30 +1,24 @@
 import CommentModel from './model/comment-model';
 import FilterModel from './model/filter-model';
 import MovieModel from './model/movie-model';
+import StatisticPresenter from './presenter/statistic-presenter';
 import FilterPresenter from './presenter/filter-presenter';
 import ProfilePresenter from './presenter/profile-presenter';
 import MainPresenter from './presenter/main-presenter';
-import {generateMovies} from './mock/movie';
-import {generateComments} from './mock/comments';
+import Api from './utils/api';
 
-const TOTAL_COMMENTS_COUNT = 100;
-const MOVIES_COUNT = 25;
+const END_POINT = 'https://17.ecmascript.pages.academy/cinemaddict';
+const AUTHORIZATION = 'Basic koteech1';
 
 const siteBodyElement = document.querySelector('body');
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
 const siteFooterStatisticElement = document.querySelector('.footer__statistics');
 
-const movieModel = new MovieModel();
-const commentModel = new CommentModel();
+const api = new Api(END_POINT, AUTHORIZATION);
+const movieModel = new MovieModel(api);
+const commentModel = new CommentModel(api);
 const filterModel = new FilterModel();
-
-const setData = () => {
-  const comments = generateComments(TOTAL_COMMENTS_COUNT);
-  const movies = generateMovies(MOVIES_COUNT, comments);
-  movieModel.movies = movies;
-  commentModel.comments = comments;
-};
 
 const profilePresenter = new ProfilePresenter(
   siteHeaderElement,
@@ -39,14 +33,19 @@ const filterPresenter = new FilterPresenter(
 
 const mainPresenter = new MainPresenter(
   siteMainElement,
-  siteFooterStatisticElement,
   siteBodyElement,
   movieModel,
   commentModel,
   filterModel
 );
 
-setData();
+const statisticPresenter = new StatisticPresenter(
+  siteFooterStatisticElement,
+  movieModel
+);
+
 profilePresenter.init();
 filterPresenter.init();
 mainPresenter.init();
+statisticPresenter.init();
+movieModel.init();
