@@ -11,7 +11,7 @@ const Mode = {
 };
 
 const TimeLimit = {
-  LOWER_LIMIT: 350,
+  LOWER_LIMIT: 0,
   UPPER_LIMIT: 1000,
 };
 
