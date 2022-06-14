@@ -11,7 +11,7 @@ const Mode = {
 };
 
 const TimeLimit = {
-  LOWER_LIMIT: 0,
+  LOWER_LIMIT: 50,
   UPPER_LIMIT: 1000,
 };
 
@@ -19,7 +19,7 @@ const uiBlocker = new UiBlocker(TimeLimit.LOWER_LIMIT, TimeLimit.UPPER_LIMIT);
 
 export default class MoviePresenter {
   #comments = [];
-  #movieCountainerElement = null;
+  #movieContainerElement = null;
   #movieCardComponent = null;
   #movieDetailsComponent = null;
   #movieDetailsContainerComponent = null;
@@ -34,8 +34,8 @@ export default class MoviePresenter {
   #prevMovieCardComponent = null;
   #prevMovieDetailsComponent = null;
 
-  constructor(movieCountainerElement, pageBodyElement, movieModel, commentModel, changeData, changeMode) {
-    this.#movieCountainerElement = movieCountainerElement;
+  constructor(movieContainerElement, pageBodyElement, movieModel, commentModel, changeData, changeMode) {
+    this.#movieContainerElement = movieContainerElement;
     this.#pageBodyElement = pageBodyElement;
     this.#movieModel = movieModel;
     this.#commentModel = commentModel;
@@ -56,7 +56,7 @@ export default class MoviePresenter {
     this.#movieDetailsContainerComponent = new MovieDetailsContainerView();
 
     if (this.#prevMovieCardComponent === null && this.#prevMovieDetailsComponent === null) {
-      return render(this.#movieCardComponent, this.#movieCountainerElement);
+      return render(this.#movieCardComponent, this.#movieContainerElement);
     }
 
     if (this.isOpen()) {
