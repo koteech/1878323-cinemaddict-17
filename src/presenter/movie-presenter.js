@@ -3,11 +3,19 @@ import MovieCardView from '../view/movie-card-view';
 import MovieDetailsView from '../view/movie-details-view';
 import {UpdateType, UserAction} from '../utils/const';
 import MovieDetailsContainerView from '../view/movie-details-container-view';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
   OPENED: 'OPENED',
 };
+
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
+const uiBlocker = new UiBlocker(TimeLimit.LOWER_LIMIT, TimeLimit.UPPER_LIMIT);
 
 export default class MoviePresenter {
   #comments = [];
@@ -96,9 +104,10 @@ export default class MoviePresenter {
   };
 
   #handleWatchListClick = async () => {
+    uiBlocker.block();
     try {
       await this.#changeData(
-        UserAction.UPDATE_FILM,
+        UserAction.UPDATE_MOVIE,
         UpdateType.MINOR,
         {
           ...this.movie,
@@ -110,13 +119,16 @@ export default class MoviePresenter {
       );
     } catch {
       this.#rollBackChanges();
+      uiBlocker.unblock();
     }
+    uiBlocker.unblock();
   };
 
   #handleWatchedClick = async () => {
+    uiBlocker.block();
     try {
       await this.#changeData(
-        UserAction.UPDATE_FILM,
+        UserAction.UPDATE_MOVIE,
         UpdateType.MINOR,
         {...this.movie,
           userDetails: {
@@ -126,14 +138,17 @@ export default class MoviePresenter {
         }
       );
     } catch {
+      uiBlocker.unblock();
       this.#rollBackChanges();
     }
+    uiBlocker.unblock();
   };
 
   #handleFavoriteClick = async() => {
+    uiBlocker.block();
     try {
       await this.#changeData(
-        UserAction.UPDATE_FILM,
+        UserAction.UPDATE_MOVIE,
         UpdateType.MINOR,
         {
           ...this.movie,
@@ -144,17 +159,19 @@ export default class MoviePresenter {
         }
       );
     } catch {
+      uiBlocker.unblock();
       this.#rollBackChanges();
     }
+    uiBlocker.unblock();
   };
 
   #handleCommentDeleteClick = async (commentId) => {
+    uiBlocker.block();
     try {
       await this.#commentModel.deleteComment(
         UpdateType.MINOR,
         commentId
       );
-
       this.#changeData(
         UserAction.DELETE_COMMENT,
         UpdateType.MINOR,
@@ -164,11 +181,14 @@ export default class MoviePresenter {
         }
       );
     } catch {
+      uiBlocker.unblock();
       this.#rollBackChanges();
     }
+    uiBlocker.unblock();
   };
 
   #handleCommentAdd = async (update) => {
+    uiBlocker.block();
     try {
       this.#updatedMovie = await this.#commentModel.addComment(this.movie.id, update);
 
@@ -178,8 +198,10 @@ export default class MoviePresenter {
         this.#updatedMovie
       );
     } catch {
+      uiBlocker.unblock();
       this.#rollBackChanges();
     }
+    uiBlocker.unblock();
   };
 
   resetView = () => {
