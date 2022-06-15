@@ -1,4 +1,4 @@
-import AbstractView from './abstract-view';
+import AbstractView from './abstract-view.js';
 
 /**
  * Абстрактный класс представления с состоянием
@@ -39,18 +39,6 @@ export default class AbstractStatefulView extends AbstractView {
 
   /** Метод для перерисовки элемента */
   #rerenderElement = () => {
-    const prevElement = this.element;
-    const parent = prevElement.parentElement;
-    this.removeElement();
-
-    const newElement = this.element;
-
-    parent.replaceChild(newElement, prevElement);
-
-    this._restoreHandlers();
-  };
-
-  rerenderElement = () => {
     const prevElement = this.element;
     const parent = prevElement.parentElement;
     this.removeElement();
