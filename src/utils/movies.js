@@ -1,4 +1,6 @@
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime.js';
+dayjs.extend(relativeTime);
 
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -24,12 +26,10 @@ const getDateForComment = (date) => {
   const dateInner = dayjs(date);
   const dayDiff = dayjs().diff(dateInner, 'days');
 
-  if (dayDiff <= 1) {
-    return 'Today';
+  if (dayDiff <= 30) {
+    return dayjs(date).fromNow();
   }
-  if (dayDiff > 1 && dayDiff <= 30) {
-    return `${dayDiff} days ago`;
-  }
+
   if (dayDiff > 30) {
     return dayjs(date).format('YYYY/MM/DD HH:MM');
   }
