@@ -3,7 +3,7 @@ import {nanoid} from 'nanoid';
 
 const TEXTS = [
   'Interesting setting and a good cast',
-  'Booooooooooring',
+  'Booooooooooooring',
   'Very very old. Meh',
   'Almost two hours? Seriously?',
 ];
