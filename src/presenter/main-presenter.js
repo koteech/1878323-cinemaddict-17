@@ -129,10 +129,9 @@ export default class MainPresenter {
   }
 
   #renderTopRatedMovieCards() {
-    const totalMovieRate = this.#movieModel.topRatedMovies
-      .map((movie) => parseFloat(movie.filmInfo.totalRating))
-      .reduce((a, b) => a + b);
-    if (totalMovieRate > 0) {
+    const isMovieRateExist = this.#movieModel.topRatedMovies
+      .some((movie) => parseFloat(movie.filmInfo.totalRating) > 0);
+    if (isMovieRateExist) {
       render(this.#topRatedMovieListComponent, this.#movieSectionComponent.element);
       render(this.#topRatedMovieListContainerComponent, this.#topRatedMovieListComponent.element);
       this.#movieModel.topRatedMovies.forEach((movie) => this.#renderMovie(movie, this.#topRatedMovieListContainerComponent.element));
@@ -140,10 +139,9 @@ export default class MainPresenter {
   }
 
   #renderMostCommentedMovieCards() {
-    const commentsCount = this.#movieModel.mostCommentedMovies
-      .map((movie) => movie.comments.length)
-      .reduce((a, b) => a + b);
-    if (commentsCount > 0) {
+    const isMovieCommentExist = this.#movieModel.mostCommentedMovies
+      .some((movie) => movie.comments.length > 0);
+    if (isMovieCommentExist) {
       render(this.#mostCommentedMovieListComponent, this.#movieSectionComponent.element);
       render(this.#mostCommentedMovieListContainerComponent, this.#mostCommentedMovieListComponent.element);
       this.#movieModel.mostCommentedMovies.forEach((movie) => this.#renderMovie(movie, this.#mostCommentedMovieListContainerComponent.element));
@@ -184,11 +182,7 @@ export default class MainPresenter {
   #handleViewAction = async (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_MOVIE:
-        try {
-          await this.#movieModel.updateMovie(updateType, update);
-        } catch {
-          throw new Error('Can\'t update movie');
-        }
+        await this.#movieModel.updateMovie(updateType, update);
         break;
       case UserAction.DELETE_COMMENT:
       case UserAction.ADD_COMMENT:

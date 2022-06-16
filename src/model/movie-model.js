@@ -19,7 +19,7 @@ export default class MovieModel extends Observable {
     try {
       const movies = await this.#api.movies;
       this.#movies = movies.map(this.#adaptMovieToClient);
-    } catch (err) {
+    } catch (error) {
       this.#movies = [];
     }
 
@@ -57,8 +57,8 @@ export default class MovieModel extends Observable {
       const response = await this.#api.updateMovie(update);
       const updatedMovie = this.#adaptMovieToClient(response);
       this.#setLocalMovieAndNotify(index, updateType, updatedMovie);
-    } catch {
-      throw new Error('Can\'t update movie');
+    } catch (error) {
+      throw new Error(error.message);
     }
   };
 
