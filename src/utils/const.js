@@ -1,5 +1,11 @@
 export const SECTION_EXTRA_TYPE = 'extra';
 
+export const ProfileMap = {
+  novice: [0, 10],
+  fan: [11, 20],
+  'Movie Buff': [21, Infinity]
+};
+
 export const SectionSettings = {
   ALL: {
     TITLE: 'All movies. Upcoming',
@@ -14,38 +20,35 @@ export const SectionSettings = {
   },
 };
 
-const SortType = {
+export const SortType = {
   DEFAULT: 'default',
   BY_DATE: 'by-date',
   BY_RATING: 'by-rating',
 };
 
-const UserAction = {
+export const UserAction = {
   UPDATE_MOVIE: 'UPDATE_MOVIE',
   ADD_COMMENT: 'ADD_COMMENT',
   DELETE_COMMENT: 'DELETE_COMMENT',
 };
 
-const UpdateType = {
+export const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
   INIT: 'INIT'
 };
 
-const FilterType = {
+export const FilterType = {
   ALL: 'all',
   WATCH_LIST: 'watchlist',
   HISTORY: 'history',
   FAVORITES: 'favorites',
 };
 
-const NoDataText = {
+export const NoDataText = {
   all: 'There are no movies in our database',
   watchlist: 'There are no movies to watch now',
   history: 'There are no watched movies now',
   favorites: 'There are no favorite movies now',
 };
-
-
-export {SortType, UserAction, UpdateType, FilterType, NoDataText};

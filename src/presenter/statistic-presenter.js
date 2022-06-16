@@ -1,14 +1,12 @@
-import AbstractView from '../framework/view/abstract-view';
 import FooterStatisticsView from '../view/footer-statistics-view';
 import {remove, render, replace} from '../framework/render';
 
-export default class StatisticPresenter extends AbstractView {
+export default class StatisticPresenter {
   #movieModel = null;
   #statisticComponent = null;
   #statisticContainer = null;
 
   constructor(statisticContainer, movieModel) {
-    super();
     this.#statisticContainer = statisticContainer;
     this.#movieModel = movieModel;
   }

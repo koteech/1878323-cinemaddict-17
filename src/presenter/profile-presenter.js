@@ -1,11 +1,7 @@
 import ProfileView from '../view/header-profile-view';
 import {remove, render, replace} from '../framework/render';
+import {ProfileMap} from '../utils/const';
 
-const profileMap = {
-  novice: [0, 10],
-  fan: [11, 20],
-  'Movie Buff': [21, Infinity]
-};
 
 export default class ProfilePresenter {
   #moviesWatchedCount = null;
@@ -38,7 +34,7 @@ export default class ProfilePresenter {
 
   #getWatchedMoviesCount = (movies) => movies.filter((movie) => movie.userDetails.alreadyWatched).length;
 
-  #getProfileName = (length) => Object.entries(profileMap)
+  #getProfileName = (length) => Object.entries(ProfileMap)
     .filter(([, value]) => length >= value[0] && length <= value[1])
     .flat();
 

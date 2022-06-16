@@ -105,7 +105,6 @@ const createMovieDetailsTemplate = (state, movieComments) => {
       </section>
     </div>
   </form>`;
-
 };
 
 
@@ -136,6 +135,12 @@ export default class MovieDetailsView extends AbstractStatefulView {
   _restoreHandlers = () => {
     this.#setInnerHandlers();
     this.#setOuterHandlers();
+  };
+
+  reset = (movie) => {
+    this.updateElement(
+      this.#convertMovieToState(movie)
+    );
   };
 
   restorePosition = () => {
@@ -256,7 +261,7 @@ export default class MovieDetailsView extends AbstractStatefulView {
   };
 
   #commentAddHandler = (evt) => {
-    if ((evt.ctrlKey || evt.metaKey) && evt.keyCode === 13 && this._state.commentEmoji) {
+    if ((evt.ctrlKey || evt.metaKey) && evt.key === 'Enter' && this._state.commentEmoji) {
       this.updateElement({
         scrollTop: this.element.scrollTop,
         isCommentAdding: true,
@@ -266,11 +271,5 @@ export default class MovieDetailsView extends AbstractStatefulView {
         emotion: this._state.commentEmoji
       });
     }
-  };
-
-  reset = (movie) => {
-    this.updateElement(
-      this.#convertMovieToState(movie)
-    );
   };
 }
