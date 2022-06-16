@@ -54,15 +54,25 @@ export default class MovieCardView extends AbstractStatefulView {
     this.element.querySelector('.film-card__link').addEventListener('click', this.#clickHandler);
   };
 
+  setWatchListClickHandler = (callback) => {
+    this._callback.watchListClick = callback;
+    this.element.querySelector('.film-card__controls-item--add-to-watchlist').addEventListener('click', this.#watchListClickHandler);
+  };
+
+  setWatchedClickHandler = (callback) => {
+    this._callback.watchedClick = callback;
+    this.element.querySelector('.film-card__controls-item--mark-as-watched').addEventListener('click', this.#watchedClickHandler);
+  };
+
+  setFavoriteClickHandler = (callback) => {
+    this._callback.favoriteClick = callback;
+    this.element.querySelector('.film-card__controls-item--favorite').addEventListener('click', this.#favoriteClickHandler);
+  };
+
   #clickHandler = (evt) => {
     evt.preventDefault();
     document.body.classList.add('hide-overflow');
     this._callback.click();
-  };
-
-  setWatchListClickHandler = (callback) => {
-    this._callback.watchListClick = callback;
-    this.element.querySelector('.film-card__controls-item--add-to-watchlist').addEventListener('click', this.#watchListClickHandler);
   };
 
   #watchListClickHandler = (evt) => {
@@ -73,22 +83,12 @@ export default class MovieCardView extends AbstractStatefulView {
     this._callback.watchListClick();
   };
 
-  setWatchedClickHandler = (callback) => {
-    this._callback.watchedClick = callback;
-    this.element.querySelector('.film-card__controls-item--mark-as-watched').addEventListener('click', this.#watchedClickHandler);
-  };
-
   #watchedClickHandler = (evt) => {
     evt.preventDefault();
     this.updateElement({
       isMovieUpdating: true,
     });
     this._callback.watchedClick();
-  };
-
-  setFavoriteClickHandler = (callback) => {
-    this._callback.favoriteClick = callback;
-    this.element.querySelector('.film-card__controls-item--favorite').addEventListener('click', this.#favoriteClickHandler);
   };
 
   #favoriteClickHandler = (evt) => {

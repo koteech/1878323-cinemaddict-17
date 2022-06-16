@@ -1,5 +1,5 @@
-import AbstractView from '../framework/view/abstract-view';
 import {FilterType} from '../utils/const';
+import AbstractView from '../framework/view/abstract-view';
 
 const createFilterItemTemplate = (filter, currentFilter) => `
   <a id="${filter.type}" href="#${filter.name}" class="main-navigation__item${filter.type === currentFilter ? ' main-navigation__item--active' : ''}">

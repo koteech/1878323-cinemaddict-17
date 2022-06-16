@@ -1,5 +1,5 @@
-import AbstractView from '../framework/view/abstract-view';
 import {NoDataText} from '../utils/const';
+import AbstractView from '../framework/view/abstract-view';
 
 const createMovieNoDataTemplate = (noDataText) => (`
 <section class="films-list">

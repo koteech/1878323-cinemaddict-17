@@ -1,6 +1,7 @@
+import {getHumanDate, getTimeFromMins} from '../utils/movies';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import MovieDetailsCommentView from './movie-comment-view';
-import {getHumanDate, getTimeFromMins} from '../utils/movies';
+
 
 const createMovieDetailsTemplate = (state, movieComments) => {
   const commentsTemplate = movieComments.map((comment) => new MovieDetailsCommentView(comment, state.isCommentDeleting).template).join('');
@@ -147,6 +148,52 @@ export default class MovieDetailsView extends AbstractStatefulView {
     this.element.scrollTop = this._state.scrollTop;
   };
 
+  #setInnerHandlers = () => {
+    this.element.querySelectorAll('.film-details__emoji-item')
+      .forEach((element) => element.addEventListener('click', this.#localCommentEmojiClickHandler));
+    this.element.querySelector('.film-details__comment-input')
+      .addEventListener('input', this.#localCommentInputHandler);
+  };
+
+  #setOuterHandlers = () => {
+    this.setCloseButtonClickHandler(this._callback.click);
+    this.setWatchListClickHandler(this._callback.watchListClick);
+    this.setWatchedClickHandler(this._callback.watchedClick);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
+    this.setCommentDeleteClickHandler(this._callback.commentDeleteClick);
+    this.setCommentAddHandler(this._callback.commentAdd);
+  };
+
+  setCloseButtonClickHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#closeButtonClickHandler);
+  };
+
+  setWatchListClickHandler = (callback) => {
+    this._callback.watchListClick = callback;
+    this.element.querySelector('.film-details__control-button--watchlist').addEventListener('click', this.#watchListClickHandler);
+  };
+
+  setWatchedClickHandler = (callback) => {
+    this._callback.watchedClick = callback;
+    this.element.querySelector('.film-details__control-button--watched').addEventListener('click', this.#watchedClickHandler);
+  };
+
+  setFavoriteClickHandler = (callback) => {
+    this._callback.favoriteClick = callback;
+    this.element.querySelector('.film-details__control-button--favorite').addEventListener('click', this.#favoriteClickHandler);
+  };
+
+  setCommentDeleteClickHandler = (callback) => {
+    this._callback.commentDeleteClick = callback;
+    this.element.querySelectorAll('.film-details__comment-delete').forEach((element) => element.addEventListener('click', this.#commentDeleteClickHandler));
+  };
+
+  setCommentAddHandler = (callback) => {
+    this._callback.commentAdd = callback;
+    this.element.querySelector('.film-details__comment-input').addEventListener('keydown', this.#commentAddHandler);
+  };
+
   #localCommentEmojiClickHandler = (evt) => {
     evt.preventDefault();
     this.updateElement({
@@ -170,36 +217,10 @@ export default class MovieDetailsView extends AbstractStatefulView {
     this.restorePosition();
   };
 
-  #setInnerHandlers = () => {
-    this.element.querySelectorAll('.film-details__emoji-item')
-      .forEach((element) => element.addEventListener('click', this.#localCommentEmojiClickHandler));
-    this.element.querySelector('.film-details__comment-input')
-      .addEventListener('input', this.#localCommentInputHandler);
-  };
-
-  #setOuterHandlers = () => {
-    this.setCloseButtonClickHandler(this._callback.click);
-    this.setWatchListClickHandler(this._callback.watchListClick);
-    this.setWatchedClickHandler(this._callback.watchedClick);
-    this.setFavoriteClickHandler(this._callback.favoriteClick);
-    this.setCommentDeleteClickHandler(this._callback.commentDeleteClick);
-    this.setCommentAddHandler(this._callback.commentAdd);
-  };
-
-  setCloseButtonClickHandler = (callback) => {
-    this._callback.click = callback;
-    this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#closeButtonClickHandler);
-  };
-
   #closeButtonClickHandler = (evt) => {
     evt.preventDefault();
     document.body.classList.remove('hide-overflow');
     this._callback.click();
-  };
-
-  setWatchListClickHandler = (callback) => {
-    this._callback.watchListClick = callback;
-    this.element.querySelector('.film-details__control-button--watchlist').addEventListener('click', this.#watchListClickHandler);
   };
 
   #watchListClickHandler = (evt) => {
@@ -211,11 +232,6 @@ export default class MovieDetailsView extends AbstractStatefulView {
     this._callback.watchListClick();
   };
 
-  setWatchedClickHandler = (callback) => {
-    this._callback.watchedClick = callback;
-    this.element.querySelector('.film-details__control-button--watched').addEventListener('click', this.#watchedClickHandler);
-  };
-
   #watchedClickHandler = (evt) => {
     evt.preventDefault();
     this.updateElement({
@@ -223,11 +239,6 @@ export default class MovieDetailsView extends AbstractStatefulView {
       isMovieUpdating: true,
     });
     this._callback.watchedClick();
-  };
-
-  setFavoriteClickHandler = (callback) => {
-    this._callback.favoriteClick = callback;
-    this.element.querySelector('.film-details__control-button--favorite').addEventListener('click', this.#favoriteClickHandler);
   };
 
   #favoriteClickHandler = (evt) => {
@@ -239,11 +250,6 @@ export default class MovieDetailsView extends AbstractStatefulView {
     this._callback.favoriteClick();
   };
 
-  setCommentDeleteClickHandler = (callback) => {
-    this._callback.commentDeleteClick = callback;
-    this.element.querySelectorAll('.film-details__comment-delete').forEach((element) => element.addEventListener('click', this.#commentDeleteClickHandler));
-  };
-
   #commentDeleteClickHandler = (evt) => {
     evt.preventDefault();
     const commentId = evt.target.closest('.film-details__comment').id;
@@ -253,11 +259,6 @@ export default class MovieDetailsView extends AbstractStatefulView {
     });
     this.element.querySelector(`.film-details__comment[id="${commentId}"]`).querySelector('.film-details__comment-delete').textContent = 'Deleting...';
     this._callback.commentDeleteClick(evt.target.closest('.film-details__comment').id);
-  };
-
-  setCommentAddHandler = (callback) => {
-    this._callback.commentAdd = callback;
-    this.element.querySelector('.film-details__comment-input').addEventListener('keydown', this.#commentAddHandler);
   };
 
   #commentAddHandler = (evt) => {

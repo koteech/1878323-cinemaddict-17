@@ -4,8 +4,21 @@ import relativeTime from 'dayjs/plugin/relativeTime.js';
 dayjs.extend(relativeTime);
 
 const DAY_DIFF_COUNT = 30;
+const SECONDS = 60;
 
-const getHumanDate = (date) => dayjs(date).format('DD MMMM YYYY');
+const getWeightForNull = (A, B) => {
+  if (A === null && B === null) {
+    return 0;
+  }
+
+  if (A === null) {
+    return 1;
+  }
+
+  if (B === null) {
+    return -1;
+  }
+};
 
 const getDateForComment = (date) => {
   const dateInner = dayjs(date);
@@ -22,26 +35,12 @@ const getDateForComment = (date) => {
   return dayjs(date).format('YYYY/MM/DD HH:MM');
 };
 
-const SECONDS = 60;
+const getHumanDate = (date) => dayjs(date).format('DD MMMM YYYY');
 
 const getTimeFromMins = (mins) => {
   const hours = Math.trunc(mins / SECONDS);
   const minutes = mins % SECONDS;
   return `${hours}h ${minutes}m`;
-};
-
-const getWeightForNull = (A, B) => {
-  if (A === null && B === null) {
-    return 0;
-  }
-
-  if (A === null) {
-    return 1;
-  }
-
-  if (B === null) {
-    return -1;
-  }
 };
 
 const sortMovieByDate = (movieA, movieB) => {
@@ -55,9 +54,9 @@ const sortMovieByRating = (movieA, movieB) => {
 };
 
 export {
-  sortMovieByDate,
-  sortMovieByRating,
+  getDateForComment,
   getHumanDate,
   getTimeFromMins,
-  getDateForComment
+  sortMovieByDate,
+  sortMovieByRating
 };

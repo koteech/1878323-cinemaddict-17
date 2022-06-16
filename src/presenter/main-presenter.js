@@ -1,15 +1,15 @@
+import {filter} from '../utils/filter';
+import {remove, render} from '../framework/render';
+import {SectionSettings, SortType, UpdateType, UserAction} from '../utils/const';
+import {sortMovieByDate, sortMovieByRating} from '../utils/movies';
+import LoadingView from '../view/loading-view';
+import LoadMoreButtonView from '../view/show-more-button-view';
+import MovieListContainerView from '../view/movie-container-view';
+import MovieListView from '../view/movie-list-view';
+import MovieNoDataView from '../view/movie-no-data-view';
 import MoviePresenter from './movie-presenter';
 import MovieSectionView from '../view/movie-section-view';
-import MovieListView from '../view/movie-list-view';
-import {filter} from '../utils/filter';
 import SortView from '../view/movie-sort-view';
-import MovieNoDataView from '../view/movie-no-data-view';
-import MovieListContainerView from '../view/movie-container-view';
-import LoadMoreButtonView from '../view/show-more-button-view';
-import LoadingView from '../view/loading-view';
-import {SectionSettings, SortType, UpdateType, UserAction} from '../utils/const';
-import {remove, render} from '../framework/render';
-import {sortMovieByDate, sortMovieByRating} from '../utils/movies';
 
 const ALL_MOVIE_COUNT_PER_STEP = 5;
 

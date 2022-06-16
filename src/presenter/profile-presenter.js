@@ -1,7 +1,6 @@
-import ProfileView from '../view/header-profile-view';
-import {remove, render, replace} from '../framework/render';
 import {ProfileMap} from '../utils/const';
-
+import {remove, render, replace} from '../framework/render';
+import ProfileView from '../view/header-profile-view';
 
 export default class ProfilePresenter {
   #moviesWatchedCount = null;

@@ -1,5 +1,5 @@
-import FooterStatisticsView from '../view/footer-statistics-view';
 import {remove, render, replace} from '../framework/render';
+import FooterStatisticsView from '../view/footer-statistics-view';
 
 export default class StatisticPresenter {
   #movieModel = null;

@@ -1,19 +1,19 @@
+import Api from './utils/api';
 import CommentModel from './model/comment-model';
 import FilterModel from './model/filter-model';
-import MovieModel from './model/movie-model';
-import StatisticPresenter from './presenter/statistic-presenter';
 import FilterPresenter from './presenter/filter-presenter';
-import ProfilePresenter from './presenter/profile-presenter';
 import MainPresenter from './presenter/main-presenter';
-import Api from './utils/api';
+import MovieModel from './model/movie-model';
+import ProfilePresenter from './presenter/profile-presenter';
+import StatisticPresenter from './presenter/statistic-presenter';
 
-const END_POINT = 'https://17.ecmascript.pages.academy/cinemaddict';
 const AUTHORIZATION = 'Basic koteech1';
+const END_POINT = 'https://17.ecmascript.pages.academy/cinemaddict';
 
 const siteBodyElement = document.querySelector('body');
+const siteFooterStatisticElement = document.querySelector('.footer__statistics');
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
-const siteFooterStatisticElement = document.querySelector('.footer__statistics');
 
 const api = new Api(END_POINT, AUTHORIZATION);
 const movieModel = new MovieModel(api);

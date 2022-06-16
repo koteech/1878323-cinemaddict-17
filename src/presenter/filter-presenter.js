@@ -1,7 +1,7 @@
-import {remove, render, replace} from '../framework/render';
-import FilterView from '../view/movie-filter-view';
 import {filter} from '../utils/filter';
 import {FilterType, UpdateType} from '../utils/const';
+import {remove, render, replace} from '../framework/render';
+import FilterView from '../view/movie-filter-view';
 
 export default class FilterPresenter {
   #filterComponent = null;

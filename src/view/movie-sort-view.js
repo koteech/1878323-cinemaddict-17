@@ -1,5 +1,5 @@
-import AbstractView from '../framework/view/abstract-view';
 import {SortType} from '../utils/const';
+import AbstractView from '../framework/view/abstract-view';
 
 const createSortTemplate = (currentSortType) => `
 <ul class="sort">
@@ -33,7 +33,6 @@ export default class MovieSortView extends AbstractView {
     if (evt.target.tagName !== 'A' || activeLink === evt.target) {
       return;
     }
-
     this._callback.SortTypeChange(evt.target.dataset.sortType);
   };
 }
