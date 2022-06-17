@@ -44,7 +44,7 @@ export default class MovieCardView extends AbstractStatefulView {
     this.setFavoriteControlClickHandler(this._callback.favoriteClick);
   };
 
-  setMovieDetailsClickHandler = (callback) => {
+  setMovieCardComponentClickHandler = (callback) => {
     this._callback.click = callback;
     this.element.querySelector('.film-card__link').addEventListener('click', this.#movieDetailsClickHandler);
   };
