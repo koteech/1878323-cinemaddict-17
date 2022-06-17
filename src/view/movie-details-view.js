@@ -2,7 +2,6 @@ import {getHumanDate, getTimeFromMins} from '../utils/movies';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import MovieDetailsCommentView from './movie-comment-view';
 
-
 const createMovieDetailsTemplate = (state, movieComments) => {
   const commentsTemplate = movieComments.map((comment) => new MovieDetailsCommentView(comment, state.isCommentDeleting).template).join('');
 
@@ -123,22 +122,12 @@ export default class MovieDetailsView extends AbstractStatefulView {
     return createMovieDetailsTemplate(this._state, this.#movieComments);
   }
 
-  #convertMovieToState = (movie) => ({
-    ...movie,
-    commentEmoji: null,
-    commentText: null,
-    scrollTop: null,
-    isCommentDeleting: false,
-    isCommentAdding: false,
-    isFilmUpdating: false
-  });
-
   _restoreHandlers = () => {
     this.#setInnerHandlers();
     this.#setOuterHandlers();
   };
 
-  reset = (movie) => {
+  resetState = (movie) => {
     this.updateElement(
       this.#convertMovieToState(movie)
     );
@@ -146,22 +135,6 @@ export default class MovieDetailsView extends AbstractStatefulView {
 
   restorePosition = () => {
     this.element.scrollTop = this._state.scrollTop;
-  };
-
-  #setInnerHandlers = () => {
-    this.element.querySelectorAll('.film-details__emoji-item')
-      .forEach((element) => element.addEventListener('click', this.#localCommentEmojiClickHandler));
-    this.element.querySelector('.film-details__comment-input')
-      .addEventListener('input', this.#localCommentInputHandler);
-  };
-
-  #setOuterHandlers = () => {
-    this.setCloseButtonClickHandler(this._callback.click);
-    this.setWatchListClickHandler(this._callback.watchListClick);
-    this.setWatchedClickHandler(this._callback.watchedClick);
-    this.setFavoriteClickHandler(this._callback.favoriteClick);
-    this.setCommentDeleteClickHandler(this._callback.commentDeleteClick);
-    this.setCommentAddHandler(this._callback.commentAdd);
   };
 
   setCloseButtonClickHandler = (callback) => {
@@ -192,6 +165,32 @@ export default class MovieDetailsView extends AbstractStatefulView {
   setCommentAddHandler = (callback) => {
     this._callback.commentAdd = callback;
     this.element.querySelector('.film-details__comment-input').addEventListener('keydown', this.#commentAddHandler);
+  };
+
+  #convertMovieToState = (movie) => ({
+    ...movie,
+    commentEmoji: null,
+    commentText: null,
+    scrollTop: null,
+    isCommentDeleting: false,
+    isCommentAdding: false,
+    isFilmUpdating: false
+  });
+
+  #setInnerHandlers = () => {
+    this.element.querySelectorAll('.film-details__emoji-item')
+      .forEach((element) => element.addEventListener('click', this.#localCommentEmojiClickHandler));
+    this.element.querySelector('.film-details__comment-input')
+      .addEventListener('input', this.#localCommentInputHandler);
+  };
+
+  #setOuterHandlers = () => {
+    this.setCloseButtonClickHandler(this._callback.click);
+    this.setWatchListClickHandler(this._callback.watchListClick);
+    this.setWatchedClickHandler(this._callback.watchedClick);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
+    this.setCommentDeleteClickHandler(this._callback.commentDeleteClick);
+    this.setCommentAddHandler(this._callback.commentAdd);
   };
 
   #localCommentEmojiClickHandler = (evt) => {

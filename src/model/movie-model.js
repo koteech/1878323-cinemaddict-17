@@ -92,7 +92,6 @@ export default class MovieModel extends Observable {
     return index;
   };
 
-
   #adaptMovieToClient = (movie) => {
     const adaptedMovie = {
       id: movie.id,

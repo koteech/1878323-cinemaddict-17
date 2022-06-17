@@ -159,14 +159,56 @@ export default class MainPresenter {
     render(this.#noMovieComponent, this.#allMovieListComponent.element);
   };
 
-  #showMoreButtonClickHandler = () => {
-    this.movies
-      .slice(this.#renderedAllMovies, this.#renderedAllMovies += ALL_MOVIE_COUNT_PER_STEP)
-      .forEach((movie) => this.#renderMovie(movie, this.#allMovieListContainerComponent.element));
+  #clearPage = ({resetRenderedAllMovies = false, resetSortType = false} = {}) => {
+    const movieCount = this.movies.length;
 
-    if (this.movies.length <= this.#renderedAllMovies) {
-      remove(this.#showMoreButtonComponent);
+    this.#pagePosition = document.documentElement.scrollTop;
+
+    this.#moviePresenter
+      .forEach((presenters) =>
+        presenters.forEach((presenter) => {
+          if (presenter.isOpen()) {
+            this.#openMoviePresenter = presenter;
+            return presenter.partialDestroy();
+          }
+          presenter.destroy();
+        })
+      );
+
+    this.#moviePresenter.clear();
+
+    remove(this.#sortComponent);
+    remove(this.#showMoreButtonComponent);
+    remove(this.#movieSectionComponent);
+    remove(this.#allMovieListComponent);
+    remove(this.#loadingComponent);
+    remove(this.#mostCommentedMovieListComponent);
+    remove(this.#topRatedMovieListComponent);
+
+    if (this.#noMovieComponent) {
+      remove(this.#noMovieComponent);
     }
+
+    this.#prevAllMoviesCount = this.#renderedAllMovies;
+
+    this.#renderedAllMovies = resetRenderedAllMovies ? ALL_MOVIE_COUNT_PER_STEP : Math.min(movieCount, this.#renderedAllMovies);
+
+    if (resetSortType) {
+      this.#currentSortType = SortType.DEFAULT;
+    }
+  };
+
+  #updateOpenMoviePresenter = () => {
+    if (!this.#openMoviePresenter) {
+      return;
+    }
+
+    if (!this.#openMoviePresenter.isOpen) {
+      this.#openMoviePresenter = null;
+    }
+
+    const updateMovie = this.#movieModel.movies.filter((movie) => movie.id === this.#openMoviePresenter.movie.id)[0];
+    this.#openMoviePresenter.init(updateMovie);
   };
 
   #handleSortTypeChange = (sortType) => {
@@ -222,56 +264,14 @@ export default class MainPresenter {
     }
   };
 
-  #clearPage = ({resetRenderedAllMovies = false, resetSortType = false} = {}) => {
-    const movieCount = this.movies.length;
+  #showMoreButtonClickHandler = () => {
+    this.movies
+      .slice(this.#renderedAllMovies, this.#renderedAllMovies += ALL_MOVIE_COUNT_PER_STEP)
+      .forEach((movie) => this.#renderMovie(movie, this.#allMovieListContainerComponent.element));
 
-    this.#pagePosition = document.documentElement.scrollTop;
-
-    this.#moviePresenter
-      .forEach((presenters) =>
-        presenters.forEach((presenter) => {
-          if (presenter.isOpen()) {
-            this.#openMoviePresenter = presenter;
-            return presenter.partialDestroy();
-          }
-          presenter.destroy();
-        })
-      );
-
-    this.#moviePresenter.clear();
-
-    remove(this.#sortComponent);
-    remove(this.#showMoreButtonComponent);
-    remove(this.#movieSectionComponent);
-    remove(this.#allMovieListComponent);
-    remove(this.#loadingComponent);
-    remove(this.#mostCommentedMovieListComponent);
-    remove(this.#topRatedMovieListComponent);
-
-    if (this.#noMovieComponent) {
-      remove(this.#noMovieComponent);
+    if (this.movies.length <= this.#renderedAllMovies) {
+      remove(this.#showMoreButtonComponent);
     }
-
-    this.#prevAllMoviesCount = this.#renderedAllMovies;
-
-    this.#renderedAllMovies = resetRenderedAllMovies ? ALL_MOVIE_COUNT_PER_STEP : Math.min(movieCount, this.#renderedAllMovies);
-
-    if (resetSortType) {
-      this.#currentSortType = SortType.DEFAULT;
-    }
-  };
-
-  #updateOpenMoviePresenter = () => {
-    if (!this.#openMoviePresenter) {
-      return;
-    }
-
-    if (!this.#openMoviePresenter.isOpen) {
-      this.#openMoviePresenter = null;
-    }
-
-    const updateMovie = this.#movieModel.movies.filter((movie) => movie.id === this.#openMoviePresenter.movie.id)[0];
-    this.#openMoviePresenter.init(updateMovie);
   };
 
 }

@@ -5,7 +5,6 @@ import MovieDetailsContainerView from '../view/movie-details-container-view';
 import MovieDetailsView from '../view/movie-details-view';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
-
 const Mode = {
   DEFAULT: 'DEFAULT',
   OPENED: 'OPENED',
@@ -68,6 +67,12 @@ export default class MoviePresenter {
     }
   }
 
+  resetView = () => {
+    if (this.#mode !== Mode.DEFAULT) {
+      this.#closeMovieDetails();
+    }
+  };
+
   destroy = () => {
     remove(this.#movieCardComponent);
     remove(this.#movieDetailsComponent);
@@ -76,6 +81,8 @@ export default class MoviePresenter {
   partialDestroy = () => {
     remove(this.#movieCardComponent);
   };
+
+  isOpen = () => this.#mode === Mode.OPENED;
 
   #openMovieDetails = () => {
     if (this.#mode === Mode.DEFAULT) {
@@ -90,18 +97,54 @@ export default class MoviePresenter {
 
   #closeMovieDetails = () => {
     this.#mode = Mode.DEFAULT;
-    this.#movieDetailsComponent.reset(this.movie);
+    this.#movieDetailsComponent.resetState(this.movie);
     this.#movieDetailsComponent.element.remove();
     this.#movieDetailsContainerComponent.element.remove();
     document.removeEventListener('keydown', this.#escKeydownHandler);
   };
 
-  #escKeydownHandler = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
-      evt.preventDefault();
-      document.body.classList.remove('hide-overflow');
-      this.#closeMovieDetails();
+  #rollBackChanges = () => {
+    if (this.isOpen) {
+      const resetMovieDetails = () => {
+        this.#movieDetailsComponent.updateElement({
+          isCommentDeleting: false,
+          isCommentAdding: false
+        });
+      };
+
+      this.#movieDetailsComponent.shake(resetMovieDetails);
     }
+  };
+
+  #getCommentsAndUpdateDetails = async () => {
+    const comments = await this.#commentModel.getCommentsById(this.movie.id);
+    this.#prevMovieDetailsComponent = this.#movieDetailsComponent;
+    this.#replaceMovieDetailsComponent(comments);
+  };
+
+  #replaceMovieDetailsComponent = (comments) => {
+    this.#scrollTopDetails = this.#prevMovieDetailsComponent.element.scrollTop;
+    this.#movieDetailsComponent = new MovieDetailsView(this.movie, comments);
+    this.#setMovieDetailsHandlers();
+    replace(this.#movieDetailsComponent, this.#prevMovieDetailsComponent);
+    this.#movieDetailsComponent.element.scrollTop = this.#scrollTopDetails;
+    remove(this.#prevMovieDetailsComponent);
+  };
+
+  #setMovieHandlers = () => {
+    this.#movieCardComponent.setClickHandler(this.#openMovieDetails);
+    this.#movieCardComponent.setWatchListClickHandler(this.#handleWatchListClick);
+    this.#movieCardComponent.setWatchedClickHandler(this.#handleWatchedClick);
+    this.#movieCardComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+  };
+
+  #setMovieDetailsHandlers = () => {
+    this.#movieDetailsComponent.setCloseButtonClickHandler(this.#closeMovieDetails);
+    this.#movieDetailsComponent.setWatchListClickHandler(this.#handleWatchListClick);
+    this.#movieDetailsComponent.setWatchedClickHandler(this.#handleWatchedClick);
+    this.#movieDetailsComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+    this.#movieDetailsComponent.setCommentDeleteClickHandler(this.#handleCommentDeleteClick);
+    this.#movieDetailsComponent.setCommentAddHandler(this.#handleCommentAdd);
   };
 
   #handleWatchListClick = async () => {
@@ -205,55 +248,11 @@ export default class MoviePresenter {
     uiBlocker.unblock();
   };
 
-  resetView = () => {
-    if (this.#mode !== Mode.DEFAULT) {
+  #escKeydownHandler = (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      document.body.classList.remove('hide-overflow');
       this.#closeMovieDetails();
-    }
-  };
-
-  isOpen = () => this.#mode === Mode.OPENED;
-
-  #setMovieHandlers = () => {
-    this.#movieCardComponent.setClickHandler(this.#openMovieDetails);
-    this.#movieCardComponent.setWatchListClickHandler(this.#handleWatchListClick);
-    this.#movieCardComponent.setWatchedClickHandler(this.#handleWatchedClick);
-    this.#movieCardComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
-  };
-
-  #setMovieDetailsHandlers = () => {
-    this.#movieDetailsComponent.setCloseButtonClickHandler(this.#closeMovieDetails);
-    this.#movieDetailsComponent.setWatchListClickHandler(this.#handleWatchListClick);
-    this.#movieDetailsComponent.setWatchedClickHandler(this.#handleWatchedClick);
-    this.#movieDetailsComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
-    this.#movieDetailsComponent.setCommentDeleteClickHandler(this.#handleCommentDeleteClick);
-    this.#movieDetailsComponent.setCommentAddHandler(this.#handleCommentAdd);
-  };
-
-  #getCommentsAndUpdateDetails = async () => {
-    const comments = await this.#commentModel.getCommentsById(this.movie.id);
-    this.#prevMovieDetailsComponent = this.#movieDetailsComponent;
-    this.#replaceMovieDetailsComponent(comments);
-  };
-
-  #replaceMovieDetailsComponent = (comments) => {
-    this.#scrollTopDetails = this.#prevMovieDetailsComponent.element.scrollTop;
-    this.#movieDetailsComponent = new MovieDetailsView(this.movie, comments);
-    this.#setMovieDetailsHandlers();
-    replace(this.#movieDetailsComponent, this.#prevMovieDetailsComponent);
-    this.#movieDetailsComponent.element.scrollTop = this.#scrollTopDetails;
-    remove(this.#prevMovieDetailsComponent);
-  };
-
-  #rollBackChanges = () => {
-    if (this.isOpen) {
-      const resetMovieDetails = () => {
-        this.#movieDetailsComponent.updateElement({
-          isCommentDeleting: false,
-          isCommentAdding: false
-        });
-      };
-
-      this.#movieDetailsComponent.shake(resetMovieDetails);
     }
   };
 }

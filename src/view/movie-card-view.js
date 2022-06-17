@@ -1,7 +1,7 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import dayjs from 'dayjs';
 
-const descriptionLength = 140;
+const DESCRIPTION_LENGTH = 140;
 
 const createMovieCardTemplate = (state) => `
 <article class="film-card" id=${state.id}>
@@ -14,7 +14,7 @@ const createMovieCardTemplate = (state) => `
 		    <span class="film-card__genre">${state.filmInfo.genre[0]}</span>
 		</p>
 		<img src="${state.filmInfo.poster}" alt="" class="film-card__poster">
-		<p class="film-card__description">${state.filmInfo.description.length > descriptionLength ? `${state.filmInfo.description.slice(0, 139)}...` : state.filmInfo.description}</p>
+		<p class="film-card__description">${state.filmInfo.description.length > DESCRIPTION_LENGTH ? `${state.filmInfo.description.slice(0, DESCRIPTION_LENGTH-1)}...` : state.filmInfo.description}</p>
 		<span class="film-card__comments">${state.comments.length} ${state.comments.length === 1 ? 'comment' : 'comments'}
 		</span>
 	</a>
@@ -36,11 +36,6 @@ export default class MovieCardView extends AbstractStatefulView {
   get template() {
     return createMovieCardTemplate(this._state);
   }
-
-  #convertMovieToState = (movie) => ({
-    ...movie,
-    isMovieUpdating: false
-  });
 
   _restoreHandlers = () => {
     this.setClickHandler(this._callback.click);
@@ -68,6 +63,11 @@ export default class MovieCardView extends AbstractStatefulView {
     this._callback.favoriteClick = callback;
     this.element.querySelector('.film-card__controls-item--favorite').addEventListener('click', this.#favoriteClickHandler);
   };
+
+  #convertMovieToState = (movie) => ({
+    ...movie,
+    isMovieUpdating: false
+  });
 
   #clickHandler = (evt) => {
     evt.preventDefault();
