@@ -130,7 +130,7 @@ export default class MoviePresenter {
   };
 
   #setMovieHandlers = () => {
-    this.#movieCardComponent.setMovieCardComponentClickHandler(this.#handleOpenMovieDetailsClick);
+    this.#movieCardComponent.setMovieCardClickHandler(this.#handleOpenMovieDetailsClick);
     this.#movieCardComponent.setWatchListControlClickHandler(this.#handleWatchListControlClick);
     this.#movieCardComponent.setWatchedControlClickHandler(this.#handleWatchedControlClick);
     this.#movieCardComponent.setFavoriteControlClickHandler(this.#handleFavoriteControlClick);
