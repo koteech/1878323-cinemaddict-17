@@ -130,22 +130,22 @@ export default class MoviePresenter {
   };
 
   #setMovieHandlers = () => {
-    this.#movieCardComponent.setClickHandler(this.#openMovieDetails);
-    this.#movieCardComponent.setWatchListClickHandler(this.#handleWatchListClick);
-    this.#movieCardComponent.setWatchedClickHandler(this.#handleWatchedClick);
-    this.#movieCardComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+    this.#movieCardComponent.setMovieDetailsClickHandler(this.#openMovieDetails);
+    this.#movieCardComponent.setWatchListControlClickHandler(this.#handleWatchListControlClick);
+    this.#movieCardComponent.setWatchedControlClickHandler(this.#handleWatchedControlClick);
+    this.#movieCardComponent.setFavoriteControlClickHandler(this.#handleFavoriteControlClick);
   };
 
   #setMovieDetailsHandlers = () => {
     this.#movieDetailsComponent.setCloseButtonClickHandler(this.#closeMovieDetails);
-    this.#movieDetailsComponent.setWatchListClickHandler(this.#handleWatchListClick);
-    this.#movieDetailsComponent.setWatchedClickHandler(this.#handleWatchedClick);
-    this.#movieDetailsComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+    this.#movieDetailsComponent.setWatchListControlClickHandler(this.#handleWatchListControlClick);
+    this.#movieDetailsComponent.setWatchedControlClickHandler(this.#handleWatchedControlClick);
+    this.#movieDetailsComponent.setFavoriteControlClickHandler(this.#handleFavoriteControlClick);
     this.#movieDetailsComponent.setCommentDeleteClickHandler(this.#handleCommentDeleteClick);
-    this.#movieDetailsComponent.setCommentAddHandler(this.#handleCommentAdd);
+    this.#movieDetailsComponent.setCommentAddKeydownHandler(this.#handleCommentAddKeydown);
   };
 
-  #handleWatchListClick = async () => {
+  #handleWatchListControlClick = async () => {
     uiBlocker.block();
     try {
       await this.#changeData(
@@ -166,7 +166,7 @@ export default class MoviePresenter {
     uiBlocker.unblock();
   };
 
-  #handleWatchedClick = async () => {
+  #handleWatchedControlClick = async () => {
     uiBlocker.block();
     try {
       await this.#changeData(
@@ -186,7 +186,7 @@ export default class MoviePresenter {
     uiBlocker.unblock();
   };
 
-  #handleFavoriteClick = async() => {
+  #handleFavoriteControlClick = async() => {
     uiBlocker.block();
     try {
       await this.#changeData(
@@ -229,7 +229,7 @@ export default class MoviePresenter {
     uiBlocker.unblock();
   };
 
-  #handleCommentAdd = async (update) => {
+  #handleCommentAddKeydown = async (update) => {
     uiBlocker.block();
     try {
       this.#updatedMovie = await this.#commentModel.addComment(this.movie.id, update);

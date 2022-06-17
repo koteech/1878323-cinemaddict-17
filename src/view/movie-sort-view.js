@@ -22,13 +22,13 @@ export default class MovieSortView extends AbstractView {
     return createSortTemplate(this.#currentSortType);
   }
 
-  setSortTypeChangeHandler = (callback) => {
+  setSortTypeClickHandler = (callback) => {
     this._callback.SortTypeChange = callback;
     activeLink = document.querySelector('.sort__button--active');
-    this.element.addEventListener('click', this.#sortTypeChangeHandler);
+    this.element.addEventListener('click', this.#sortTypeClickHandler);
   };
 
-  #sortTypeChangeHandler = (evt) => {
+  #sortTypeClickHandler = (evt) => {
     evt.preventDefault();
     if (evt.target.tagName !== 'A' || activeLink === evt.target) {
       return;

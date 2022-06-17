@@ -98,7 +98,7 @@ export default class MainPresenter {
 
     if (this.movies.length > this.#renderedAllMovies) {
       render(this.#showMoreButtonComponent, this.#allMovieListComponent.element);
-      this.#showMoreButtonComponent.setClickHandler(this.#showMoreButtonClickHandler);
+      this.#showMoreButtonComponent.setShowMoreButtonClickHandler(this.#showMoreButtonClickHandler);
     }
 
     if (this.#pagePosition) {
@@ -151,7 +151,7 @@ export default class MainPresenter {
   #renderSortComponent() {
     this.#sortComponent = new SortView(this.#currentSortType);
     render(this.#sortComponent, this.#mainContainer);
-    this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
+    this.#sortComponent.setSortTypeClickHandler(this.#handleSortTypeChange);
   }
 
   #renderNoMovies = () => {

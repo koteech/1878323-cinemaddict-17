@@ -28,12 +28,12 @@ export default class MovieFilterView extends AbstractView {
     return createFilterTemplate(this.#filters, this.#currentFilter);
   }
 
-  setFilterTypeChangeHandler = (callback) => {
+  setFilterTypeClickHandler = (callback) => {
     this._callback.filterTypeChange = callback;
-    this.element.querySelectorAll('.main-navigation__item').forEach((element) => element.addEventListener('click', this.#filterTypeChangeHandler));
+    this.element.querySelectorAll('.main-navigation__item').forEach((element) => element.addEventListener('click', this.#filterTypeClickHandler));
   };
 
-  #filterTypeChangeHandler = (evt) => {
+  #filterTypeClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.filterTypeChange(evt.currentTarget.id);
   };

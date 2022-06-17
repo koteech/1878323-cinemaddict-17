@@ -39,29 +39,29 @@ export default class MovieCardView extends AbstractStatefulView {
 
   _restoreHandlers = () => {
     this.setClickHandler(this._callback.click);
-    this.setWatchListClickHandler(this._callback.watchListClick);
-    this.setWatchedClickHandler(this._callback.watchedClick);
-    this.setFavoriteClickHandler(this._callback.favoriteClick);
+    this.setWatchListControlClickHandler(this._callback.watchListClick);
+    this.setWatchedControlClickHandler(this._callback.watchedClick);
+    this.setFavoriteControlClickHandler(this._callback.favoriteClick);
   };
 
-  setClickHandler = (callback) => {
+  setMovieDetailsClickHandler = (callback) => {
     this._callback.click = callback;
-    this.element.querySelector('.film-card__link').addEventListener('click', this.#clickHandler);
+    this.element.querySelector('.film-card__link').addEventListener('click', this.#movieDetailsClickHandler);
   };
 
-  setWatchListClickHandler = (callback) => {
+  setWatchListControlClickHandler = (callback) => {
     this._callback.watchListClick = callback;
-    this.element.querySelector('.film-card__controls-item--add-to-watchlist').addEventListener('click', this.#watchListClickHandler);
+    this.element.querySelector('.film-card__controls-item--add-to-watchlist').addEventListener('click', this.#watchListControlClickHandler);
   };
 
-  setWatchedClickHandler = (callback) => {
+  setWatchedControlClickHandler = (callback) => {
     this._callback.watchedClick = callback;
-    this.element.querySelector('.film-card__controls-item--mark-as-watched').addEventListener('click', this.#watchedClickHandler);
+    this.element.querySelector('.film-card__controls-item--mark-as-watched').addEventListener('click', this.#watchedControlClickHandler);
   };
 
-  setFavoriteClickHandler = (callback) => {
+  setFavoriteControlClickHandler = (callback) => {
     this._callback.favoriteClick = callback;
-    this.element.querySelector('.film-card__controls-item--favorite').addEventListener('click', this.#favoriteClickHandler);
+    this.element.querySelector('.film-card__controls-item--favorite').addEventListener('click', this.#favoriteControlClickHandler);
   };
 
   #convertMovieToState = (movie) => ({
@@ -69,13 +69,13 @@ export default class MovieCardView extends AbstractStatefulView {
     isMovieUpdating: false
   });
 
-  #clickHandler = (evt) => {
+  #movieDetailsClickHandler = (evt) => {
     evt.preventDefault();
     document.body.classList.add('hide-overflow');
     this._callback.click();
   };
 
-  #watchListClickHandler = (evt) => {
+  #watchListControlClickHandler = (evt) => {
     evt.preventDefault();
     this.updateElement({
       isMovieUpdating: true,
@@ -83,7 +83,7 @@ export default class MovieCardView extends AbstractStatefulView {
     this._callback.watchListClick();
   };
 
-  #watchedClickHandler = (evt) => {
+  #watchedControlClickHandler = (evt) => {
     evt.preventDefault();
     this.updateElement({
       isMovieUpdating: true,
@@ -91,7 +91,7 @@ export default class MovieCardView extends AbstractStatefulView {
     this._callback.watchedClick();
   };
 
-  #favoriteClickHandler = (evt) => {
+  #favoriteControlClickHandler = (evt) => {
     evt.preventDefault();
     this.updateElement({
       isMovieUpdating: true,
