@@ -67,7 +67,7 @@ export default class MoviePresenter {
 
   resetView = () => {
     if (this.#mode !== Mode.DEFAULT) {
-      this.#closeMovieDetails();
+      this.#handleCloseMovieDetailsClick();
     }
   };
 
@@ -82,7 +82,7 @@ export default class MoviePresenter {
 
   isOpen = () => this.#mode === Mode.OPENED;
 
-  #openMovieDetails = () => {
+  #handleOpenMovieDetailsClick = () => {
     if (this.#mode === Mode.DEFAULT) {
       render(this.#movieDetailsContainerComponent, this.#pageBodyElement);
       render(this.#movieDetailsComponent, this.#movieDetailsContainerComponent.element);
@@ -93,7 +93,7 @@ export default class MoviePresenter {
     }
   };
 
-  #closeMovieDetails = () => {
+  #handleCloseMovieDetailsClick = () => {
     this.#mode = Mode.DEFAULT;
     this.#movieDetailsComponent.resetState(this.movie);
     this.#movieDetailsComponent.element.remove();
@@ -130,14 +130,14 @@ export default class MoviePresenter {
   };
 
   #setMovieHandlers = () => {
-    this.#movieCardComponent.setMovieDetailsClickHandler(this.#openMovieDetails);
+    this.#movieCardComponent.setMovieDetailsClickHandler(this.#handleOpenMovieDetailsClick);
     this.#movieCardComponent.setWatchListControlClickHandler(this.#handleWatchListControlClick);
     this.#movieCardComponent.setWatchedControlClickHandler(this.#handleWatchedControlClick);
     this.#movieCardComponent.setFavoriteControlClickHandler(this.#handleFavoriteControlClick);
   };
 
   #setMovieDetailsHandlers = () => {
-    this.#movieDetailsComponent.setCloseButtonClickHandler(this.#closeMovieDetails);
+    this.#movieDetailsComponent.setCloseButtonClickHandler(this.#handleCloseMovieDetailsClick);
     this.#movieDetailsComponent.setWatchListControlClickHandler(this.#handleWatchListControlClick);
     this.#movieDetailsComponent.setWatchedControlClickHandler(this.#handleWatchedControlClick);
     this.#movieDetailsComponent.setFavoriteControlClickHandler(this.#handleFavoriteControlClick);
@@ -250,7 +250,7 @@ export default class MoviePresenter {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       document.body.classList.remove('hide-overflow');
-      this.#closeMovieDetails();
+      this.#handleCloseMovieDetailsClick();
     }
   };
 }
