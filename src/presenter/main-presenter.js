@@ -107,7 +107,7 @@ export default class MainPresenter {
   };
 
   #renderMovie(movie, container) {
-    const moviePresenter = new MoviePresenter(container, this.#pageBodyElement, this.#movieModel, this.#commentModel, this.#handleViewAction, this.#handleModeChange);
+    const moviePresenter = new MoviePresenter(container, this.#pageBodyElement, this.#commentModel, this.#handleViewAction, this.#handleModeChange);
     moviePresenter.init(movie);
     if (this.#moviePresenter.has(movie.id)) {
       this.#moviePresenter.get(movie.id).push(moviePresenter);

@@ -52,14 +52,9 @@ export default class MovieModel extends Observable {
 
   updateMovie = async (updateType, update) => {
     const index = this.#checkMovieExisting(update);
-
-    try {
-      const response = await this.#api.updateMovie(update);
-      const updatedMovie = this.#adaptMovieToClient(response);
-      this.#setLocalMovieAndNotify(index, updateType, updatedMovie);
-    } catch (error) {
-      throw new Error(error.message);
-    }
+    const response = await this.#api.updateMovie(update);
+    const updatedMovie = this.#adaptMovieToClient(response);
+    this.#setLocalMovieAndNotify(index, updateType, updatedMovie);
   };
 
   updateLocalMovie = async (updateType, update) => {

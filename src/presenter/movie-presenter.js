@@ -24,7 +24,6 @@ export default class MoviePresenter {
   #movieDetailsComponent = null;
   #movieDetailsContainerComponent = null;
   #pageBodyElement = null;
-  #movieModel = null;
   #commentModel = null;
   #changeData = null;
   #changeMode = null;
@@ -34,10 +33,9 @@ export default class MoviePresenter {
   #prevMovieCardComponent = null;
   #prevMovieDetailsComponent = null;
 
-  constructor(movieContainerElement, pageBodyElement, movieModel, commentModel, changeData, changeMode) {
+  constructor(movieContainerElement, pageBodyElement, commentModel, changeData, changeMode) {
     this.#movieContainerElement = movieContainerElement;
     this.#pageBodyElement = pageBodyElement;
-    this.#movieModel = movieModel;
     this.#commentModel = commentModel;
     this.#changeData = changeData;
     this.#changeMode = changeMode;
