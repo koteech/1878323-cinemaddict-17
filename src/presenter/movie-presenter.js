@@ -108,9 +108,10 @@ export default class MoviePresenter {
           isCommentDeleting: false,
           isCommentAdding: false
         });
+        this.#setMovieHandlers();
       };
-
       this.#movieDetailsComponent.shake(resetMovieDetails);
+      this.#movieCardComponent.shake(resetMovieDetails);
     }
   };
 
