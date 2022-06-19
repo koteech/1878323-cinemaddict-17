@@ -14,7 +14,7 @@ const createMovieCardTemplate = (state) => `
 		    <span class="film-card__genre">${state.filmInfo.genre[0]}</span>
 		</p>
 		<img src="${state.filmInfo.poster}" alt="" class="film-card__poster">
-		<p class="film-card__description">${state.filmInfo.description.length > DESCRIPTION_LENGTH ? `${state.filmInfo.description.slice(0, DESCRIPTION_LENGTH-1)}...` : state.filmInfo.description}</p>
+		<p class="film-card__description">${state.filmInfo.description.length > DESCRIPTION_LENGTH ? `${state.filmInfo.description.slice(0, DESCRIPTION_LENGTH - 1)}...` : state.filmInfo.description}</p>
 		<span class="film-card__comments">${state.comments.length} ${state.comments.length === 1 ? 'comment' : 'comments'}
 		</span>
 	</a>

@@ -9,6 +9,14 @@ export default class CommentModel extends Observable {
     this.#api = api;
   }
 
+  get comments() {
+    return this.#comments;
+  }
+
+  set comments(comments) {
+    this.#comments = comments;
+  }
+
   getCommentsById = async (movieId) => {
     try {
       this.#comments = await this.#api.getComments(movieId);
@@ -19,14 +27,6 @@ export default class CommentModel extends Observable {
 
     return this.#comments;
   };
-
-  get comments() {
-    return this.#comments;
-  }
-
-  set comments(comments) {
-    this.#comments = comments;
-  }
 
   deleteComment = async (updateType, id) => {
     await this.#api.deleteComment(id);

@@ -15,17 +15,6 @@ export default class MovieModel extends Observable {
     this.#api = api;
   }
 
-  init = async () => {
-    try {
-      const movies = await this.#api.movies;
-      this.#movies = movies.map(this.#adaptMovieToClient);
-    } catch (error) {
-      this.#movies = [];
-    }
-
-    this._notify(UpdateType.INIT);
-  };
-
   get movies() {
     return this.#movies;
   }
@@ -49,6 +38,17 @@ export default class MovieModel extends Observable {
 
     return this.#mostCommentedMovies;
   }
+
+  init = async () => {
+    try {
+      const movies = await this.#api.movies;
+      this.#movies = movies.map(this.#adaptMovieToClient);
+    } catch (error) {
+      this.#movies = [];
+    }
+
+    this._notify(UpdateType.INIT);
+  };
 
   updateMovie = async (updateType, update) => {
     const index = this.#checkMovieExisting(update);

@@ -172,7 +172,8 @@ export default class MoviePresenter {
       await this.#changeData(
         UserAction.UPDATE_MOVIE,
         UpdateType.MINOR,
-        {...this.movie,
+        {
+          ...this.movie,
           userDetails: {
             ...this.movie.userDetails,
             alreadyWatched: !this.movie.userDetails.alreadyWatched,
@@ -186,7 +187,7 @@ export default class MoviePresenter {
     uiBlocker.unblock();
   };
 
-  #handleFavoriteControlClick = async() => {
+  #handleFavoriteControlClick = async () => {
     uiBlocker.block();
     try {
       await this.#changeData(
