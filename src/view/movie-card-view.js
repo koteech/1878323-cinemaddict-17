@@ -38,7 +38,7 @@ export default class MovieCardView extends AbstractStatefulView {
   }
 
   _restoreHandlers = () => {
-    this.setClickHandler(this._callback.click);
+    this.setMovieCardClickHandler(this._callback.click);
     this.setWatchListControlClickHandler(this._callback.watchListClick);
     this.setWatchedControlClickHandler(this._callback.watchedClick);
     this.setFavoriteControlClickHandler(this._callback.favoriteClick);

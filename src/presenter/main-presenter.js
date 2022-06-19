@@ -50,7 +50,7 @@ export default class MainPresenter {
   }
 
   get movies() {
-    const filterType = this.#filterModel.filter;
+    const filterType = this.#filterModel.movieFilter;
     const movies = this.#movieModel.movies;
     const filteredMovies = filter[filterType](movies);
 
@@ -155,7 +155,7 @@ export default class MainPresenter {
   }
 
   #renderNoMovies = () => {
-    this.#noMovieComponent = new MovieNoDataView(this.#filterModel.filter);
+    this.#noMovieComponent = new MovieNoDataView(this.#filterModel.movieFilter);
     render(this.#noMovieComponent, this.#allMovieListComponent.element);
   };
 

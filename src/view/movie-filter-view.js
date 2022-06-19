@@ -1,16 +1,16 @@
 import {FilterType} from '../utils/const';
 import AbstractView from '../framework/view/abstract-view';
 
-const createFilterItemTemplate = (filter, currentFilter) => `
-  <a id="${filter.type}" href="#${filter.name}" class="main-navigation__item${filter.type === currentFilter ? ' main-navigation__item--active' : ''}">
-  ${filter.type !== FilterType.ALL ?
-    `${filter.name.charAt(0).toUpperCase() + filter.name.slice(1)}
-    <span class="main-navigation__item-count">${filter.count}</span>`
+const createFilterItemTemplate = (movieFilter, currentFilter) => `
+  <a id="${movieFilter.type}" href="#${movieFilter.name}" class="main-navigation__item${movieFilter.type === currentFilter ? ' main-navigation__item--active' : ''}">
+  ${movieFilter.type !== FilterType.ALL ?
+    `${movieFilter.name.charAt(0).toUpperCase() + movieFilter.name.slice(1)}
+    <span class="main-navigation__item-count">${movieFilter.count}</span>`
     : 'All movies'}
   </a>`;
 
 const createFilterTemplate = (filters, currentFilter) => `<nav class="main-navigation">
-  ${filters.map((filter) => createFilterItemTemplate(filter, currentFilter)).join(' ')}
+  ${filters.map((movieFilter) => createFilterItemTemplate(movieFilter, currentFilter)).join(' ')}
 </nav>`;
 
 
