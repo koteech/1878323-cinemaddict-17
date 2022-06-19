@@ -13,7 +13,6 @@ const createFilterTemplate = (filters, currentFilter) => `<nav class="main-navig
   ${filters.map((movieFilter) => createFilterItemTemplate(movieFilter, currentFilter)).join(' ')}
 </nav>`;
 
-
 export default class MovieFilterView extends AbstractView {
   #filters = null;
   #currentFilter = null;
