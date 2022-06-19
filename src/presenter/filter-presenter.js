@@ -69,6 +69,6 @@ export default class FilterPresenter {
       return;
     }
 
-    this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
+    this.#filterModel.setMovieFilter(UpdateType.MAJOR, filterType);
   };
 }
