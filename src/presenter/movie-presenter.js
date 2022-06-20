@@ -102,17 +102,24 @@ export default class MoviePresenter {
   };
 
   #rollBackChanges = () => {
-    if (this.isOpen) {
+    if (this.isOpen()) {
       const resetMovieDetails = () => {
         this.#movieDetailsComponent.updateElement({
           isCommentDeleting: false,
-          isCommentAdding: false
+          isCommentAdding: false,
+          isMovieUpdating: false
         });
-        this.#setMovieHandlers();
       };
       this.#movieDetailsComponent.shake(resetMovieDetails);
-      this.#movieCardComponent.shake(resetMovieDetails);
+      return;
     }
+
+    const resetMovie = () => {
+      this.#movieCardComponent.updateElement({
+        isMovieUpdating: false
+      });
+    };
+    this.#movieCardComponent.shake(resetMovie);
   };
 
   #getCommentsAndUpdateDetails = async () => {

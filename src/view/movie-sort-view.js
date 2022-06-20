@@ -8,8 +8,6 @@ const createSortTemplate = (currentSortType) => `
     <li><a href="#" class="sort__button${currentSortType === SortType.BY_RATING ? ' sort__button--active' : ''}" data-sort-type="${SortType.BY_RATING}">Sort by rating</a></li>
 </ul>`;
 
-let activeLink;
-
 export default class MovieSortView extends AbstractView {
   #currentSortType = null;
 
@@ -24,13 +22,12 @@ export default class MovieSortView extends AbstractView {
 
   setSortTypeClickHandler = (callback) => {
     this._callback.SortTypeChange = callback;
-    activeLink = document.querySelector('.sort__button--active');
     this.element.addEventListener('click', this.#sortTypeClickHandler);
   };
 
   #sortTypeClickHandler = (evt) => {
     evt.preventDefault();
-    if (evt.target.tagName !== 'A' || activeLink === evt.target) {
+    if (evt.target.tagName !== 'A') {
       return;
     }
     this._callback.SortTypeChange(evt.target.dataset.sortType);
